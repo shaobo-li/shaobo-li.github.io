@@ -1,0 +1,19 @@
+# jemdoc: menu{MENU.txt}{research.html}
+= Shaobo Li — Research
+
+
+== Publications
+- Li, S., Zhu, X., Chen, Y., and Liu, D. (2021). "PAsso: an R package for Assessing Partial Association between Ordinal Variables," /The R Journal (forthcoming)/.  
+- Liu, D., Li, S., Yu, Y., and Moustaki, I. (2021). "Assessing Partial Association between Ordinal Variables: Quantification, Visualization, and Hypothesis Testing," /Journal of the American Statistical Association/, 116(534), 955-968. \[[https://doi.org/10.1080/01621459.2020.1796394 paper]\] \[[https://CRAN.R-project.org/package=PAsso R package]\].
+- Schneider, M. J., Jagpal, S., Gupta, S., Li, S., and Yu, Y. (2018). "A Flexible Method for Protecting Marketing Data: An Application to Point-of-Sale Data," /Marketing Science/, 37(1), 153-171. \[[https://doi.org/10.1287/mksc.2017.1064 paper]\].
+- Schneider, M. J., Jagpal, S., Gupta, S., Li, S., and Yu, Y. (2017). "Protecting Customer Data: Marketing with Second-Party Data", /International Journal of Research in Marketing/,  34(3), 593-603. \[[https://doi.org/10.1016/j.ijresmar.2017.02.003 paper]\].
+
+
+== Working Paper
+- "Re-identification Risk in Household Panel Data: Protecting for /k/-Anonymization," /(under revision)/.
+- "Quantile regression feature selection and estimation with grouped variables using Huber approximation," /(under review)/.
+- "Penalized Maximum Tangent Likelihood Estimation and Robust Variable Selection," (under review) \[[https://arxiv.org/abs/1708.05439 arXiv]\].
+- "Corporate Default Probability: A Discrete Single-Index Hazard Model Approach," /(under review)/.
+- "Predicting Corporate Bankruptcy: A Penalized Semiparametric Index Hazard Model."
+
+
