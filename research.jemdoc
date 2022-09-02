@@ -4,7 +4,7 @@
 
 == Publications
 - Li, S., Tian, S., Yu, Y., Zhu, X., and Lian H. (2022+). Corporate Probability of Default: A Single-Index Hazard Model Approach. /Journal of Business & Economic Statistics/, forthcoming. \[[paper/JBES-bankruptcy-single-index.pdf working paper]\]
-- Li, S., Schneider, M. J., Yu, Y., and Gupta, S. (2022+). Re-identification Risk in Panel Data: Protecting for /k/-Anonymization. /Information Systems Research/, forthcoming. \[[paper/ISR-panel-data-k-anonymity1.pdf working paper]\]
+- Li, S., Schneider, M. J., Yu, Y., and Gupta, S. (2022+). Re-identification Risk in Panel Data: Protecting for /k/-Anonymization. /Information Systems Research/, forthcoming. \[[paper/ISR-panel-data-k-anonymity.pdf working paper]\]
 - Sherwood, B. and Li, S. (2022+). Quantile Regression Feature Selection and Estimation with Grouped Variables Using Huber Approximation. /Statistics and Computing/, forthcoming. \[[paper/STCO-huberGroup.pdf working paper]\]
 - Li, S., Zhu, X., Chen, Y., and Liu, D. (2021). PAsso: an R package for Assessing Partial Association between Ordinal Variables. /The R Journal/, 13(2), 239-252. \[[https://journal.r-project.org/archive/2021/RJ-2021-088/index.html paper]\].  
 - Liu, D., Li, S., Yu, Y., and Moustaki, I. (2021). Assessing Partial Association between Ordinal Variables: Quantification, Visualization, and Hypothesis Testing. /Journal of the American Statistical Association/, 116(534), 955-968. \[[https://doi.org/10.1080/01621459.2020.1796394 paper]\] \[[https://CRAN.R-project.org/package=PAsso R package]\].
