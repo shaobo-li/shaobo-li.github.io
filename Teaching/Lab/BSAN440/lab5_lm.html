@@ -732,16 +732,12 @@ always convert a table, vector or matrix to a dataframe using
 <p>We can also obtain prediction confidence interval.</p>
 <pre class="r"><code>predict(model0, newdata = data.frame(rm=c(5,10,15)), interval = &quot;confidence&quot;)</code></pre>
 <pre><code>##         fit       lwr       upr
-## 1  10.95870  9.669052  12.24834
-## 2  56.66421 53.376126  59.95230
-## 3 102.36973 94.756875 109.98259</code></pre>
+## 1  10.67432  9.424724  11.92392
+## 2  57.22939 53.993701  60.46508
+## 3 103.78446 96.306651 111.26227</code></pre>
 <p>After obtain the prediction, we calculate prediction error.</p>
-<pre class="r"><code>mspe.model0 &lt;- mean((Boston.test-pred.model0)^2)</code></pre>
-<pre><code>## Warning in mean.default((Boston.test - pred.model0)^2): argument is not numeric
-## or logical: returning NA</code></pre>
-<pre class="r"><code>mape.model0 &lt;- mean(abs(Boston.test-pred.model0))</code></pre>
-<pre><code>## Warning in mean.default(abs(Boston.test - pred.model0)): argument is not numeric
-## or logical: returning NA</code></pre>
+<pre class="r"><code>mspe.model0 &lt;- mean((Boston.test$medv-pred.model0)^2)
+mape.model0 &lt;- mean(abs(Boston.test$medv-pred.model0))</code></pre>
 </div>
 <div id="exercise-2" class="section level4">
 <h4>Exercise:</h4>
@@ -791,18 +787,18 @@ want to use another measure we need to define a cost function.</li>
 <pre class="r"><code>library(boot)
 model.glm1 = glm(medv~., data = Boston)
 cv.glm(data = Boston, glmfit = model.glm1, K = 10)$delta[2]</code></pre>
-<pre><code>## [1] 23.93534</code></pre>
+<pre><code>## [1] 23.52376</code></pre>
 <p>Comparing with model 2</p>
 <pre class="r"><code>model.glm2 = glm(medv~. -indus -age, data = Boston)
 cv.glm(data = Boston, glmfit = model.glm2, K = 10)$delta[2]</code></pre>
-<pre><code>## [1] 23.59279</code></pre>
+<pre><code>## [1] 24.18981</code></pre>
 <p>Now we define a MAD cost function as the CV score. The function takes
 2 input vectors, pi = predicted values, r = actual values.</p>
 <pre class="r"><code>MAD_cost = function(pi, r){
   return(mean(abs(pi-r)))
 }
 cv.glm(data = Boston, glmfit = model.glm1, cost = MAD_cost, K = 10)$delta[2]</code></pre>
-<pre><code>## [1] 3.425223</code></pre>
+<pre><code>## [1] 3.397526</code></pre>
 </div>
 <div id="exercise-conduct-a-10-fold-cross-validation-for-all-candidate-models-and-compare-the-cv-score-in-terms-of-mse-and-mae." class="section level4">
 <h4>Exercise: Conduct a 10-fold cross-validation for all candidate
@@ -826,11 +822,11 @@ cv_model0</code></pre>
 ## 
 ## No pre-processing
 ## Resampling: Cross-Validated (10 fold) 
-## Summary of sample sizes: 455, 455, 455, 455, 456, 456, ... 
+## Summary of sample sizes: 455, 456, 454, 454, 455, 456, ... 
 ## Resampling results:
 ## 
 ##   RMSE      Rsquared   MAE     
-##   6.553076  0.5022507  4.462193
+##   6.573017  0.5016003  4.470067
 ## 
 ## Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 </div>
@@ -855,24 +851,24 @@ explored.</p>
 ## 
 ## MAE 
 ##            Min.  1st Qu.   Median     Mean  3rd Qu.     Max. NA&#39;s
-## model0 3.261085 4.254010 4.514033 4.462193 4.794919 5.218159    0
-## model1 3.091734 3.612403 3.936446 3.913436 4.124704 4.904088    0
-## model2 2.550083 3.088047 3.358005 3.361360 3.780945 3.859841    0
-## model3 2.806021 3.118508 3.450907 3.380676 3.649113 3.748389    0
+## model0 3.628577 4.245263 4.549988 4.470067 4.727953 5.027031    0
+## model1 3.150598 3.734137 3.975587 3.918458 4.212810 4.441374    0
+## model2 2.954827 3.031298 3.203938 3.389470 3.745302 4.123892    0
+## model3 2.649441 3.065411 3.215307 3.344009 3.642640 4.027801    0
 ## 
 ## RMSE 
 ##            Min.  1st Qu.   Median     Mean  3rd Qu.     Max. NA&#39;s
-## model0 4.422681 6.130471 6.575219 6.553076 7.003492 8.526525    0
-## model1 3.856079 5.143188 5.297776 5.430028 5.815783 7.057136    0
-## model2 3.433100 4.305665 4.621433 4.785055 5.657124 5.995128    0
-## model3 4.099913 4.350007 4.816730 4.822636 5.179704 5.726721    0
+## model0 4.967826 5.681073 6.661540 6.573017 7.400266 8.134025    0
+## model1 4.329454 5.127395 5.301284 5.467364 6.104819 6.658453    0
+## model2 3.772770 4.367711 4.642629 4.814925 5.284436 6.180563    0
+## model3 3.779010 3.956338 4.724229 4.768960 5.305880 6.210826    0
 ## 
 ## Rsquared 
 ##             Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA&#39;s
-## model0 0.2581081 0.4698114 0.5145783 0.5022507 0.5326555 0.8169985    0
-## model1 0.5814840 0.6120766 0.6496271 0.6622624 0.6960687 0.7867678    0
-## model2 0.4930116 0.6397482 0.7751700 0.7235554 0.8046616 0.8356499    0
-## model3 0.6439072 0.6834170 0.7313986 0.7260133 0.7694287 0.8037611    0</code></pre>
+## model0 0.2410703 0.4322421 0.4514238 0.5016003 0.6212334 0.7223639    0
+## model1 0.4410495 0.5629812 0.7007657 0.6546383 0.7321757 0.8155198    0
+## model2 0.6391754 0.7042640 0.7230109 0.7310239 0.7616906 0.8190616    0
+## model3 0.5573516 0.6622627 0.7714262 0.7333950 0.8053189 0.8352884    0</code></pre>
 <hr />
 </div>
 </div>
