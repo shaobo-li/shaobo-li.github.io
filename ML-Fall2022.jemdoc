@@ -1,0 +1,55 @@
+# jemdoc
+= BSAN 750 Data Mining and Machine Learning with R (Fall 2022) 
+
+
+== Course info.
+- [Teaching/SyllabusBSAN750_2022Fall.pdf *Syllabus*]\n
+- Room: CAPF 3056\n
+- Time: T, H 11-12:15pm\n
+- Office hour: by appointment
+- Contact: [shaobo.li@ku.edu]
+
+== Links
+- Programming tutorial: [https://www.datacamp.com/ DataCamp]
+- Data repositories
+  -- [http://archive.ics.uci.edu/ml/index.php UCI Machine Learning Repository]
+  -- [http://www.kaggle.com/datasets/ Kaggle]
+  -- [http://www.kdnuggets.com/ KDD Nuggets]
+- [Teaching/Wu2008_Article_Top10AlgorithmsInDataMining.pdf Top 10 Data Mining Algorithms]
+- After this class, I hope you have answers for most of these [https://www.springboard.com/blog/machine-learning-interview-questions/ interview questions.]
+
+== Recommended textbooks and tutorials
+- [https://www.statlearning.com/ Introduction to Statistical Learning] [https://www.dataschool.io/15-hours-of-expert-machine-learning-videos/ \[Online course videos\]]
+- [https://web.stanford.edu/~hastie/ElemStatLearn/ Elements of Statistical Learning] (more theoretical)
+- [https://r4ds.had.co.nz/ R for Data Science] (extremely useful R programming skills)
+- Another great [http://uc-r.github.io/predictive online tutorial] from [https://business.uc.edu/academics/undergraduate/business-analytics.html UC Business Analytics] by [https://bradleyboehmke.github.io/ Bradley Boehmke]
+
+== Lecture
+/These slides are built based on the recommended textbooks./
+
+- [Teaching/Lecture/1_Intro.pdf Lecture 1]
+- [Teaching/Lecture/2_SimpleAlgorithms.pdf Lecture 2]
+- [Teaching/Lecture/3_LinearReg.pdf Lecture 3]
+- [Teaching/Lecture/4_VarSelection.pdf Lecture 4]
+- [Teaching/Lecture/5_LogisticReg.pdf Lecture 5]
+- [Teaching/Lecture/6_tree.pdf Lecture 6]
+- [Teaching/Lecture/7_nnet.pdf Lecture 7]
+
+
+
+== R Lab Notes
+
+- [Teaching/Lab/lab1_intro.html Lab 1. Introduction to R]
+- [Teaching/Lab/lab2_eda.html Lab 2. Exploratory data analysis]
+- [Teaching/Lab/lab3_simpleML.html Lab 3. k-means and k-nearest neighbor]
+- [Teaching/Lab/lab4_lm.html Lab 4. Linear Regression]
+- Lab 5. Variable Selection and Regularized Method \[[Teaching/Lab/lab5_VarSel1.html Part1]\] \[[Teaching/Lab/lab5_VarSel2.html Part2]\]
+- [Teaching/Lab/lab6_logit.html Lab 6. Logistic Regression]
+- [Teaching/Lab/lab7_tree.html Lab 7. CART]
+- Lab 8. Bagging, Random Forest, Boosting and XGBoost \[[Teaching/Lab/lab8_advTree1.html Part1]\] \[[Teaching/Lab/lab8_advTree2.html Part2]\]
+- [Teaching/Lab/lab9_ann.html Lab 9. Neural Networks]
+
+
+== HW and Exercise
+
+- See Canvas
