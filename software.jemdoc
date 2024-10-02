@@ -1,0 +1,11 @@
+# jemdoc: menu{MENU.txt}{software.html}
+= R packages
+
+- [https://CRAN.R-project.org/package=hrqglas hrqglas]\n
+A program that conducts group variable selection for quantile and robust mean regression through the Huber loss (Sherwood and Li, 2021 working paper).
+
+- [https://CRAN.R-project.org/package=PAsso PAsso]\n
+An implementation of the unified framework for assessing partial association between ordinal variables after adjusting for a set of covariates ([https://doi.org/10.1080/01621459.2020.1796394 Liu, et al. 2021 JASA]). The package provides a set of tools to quantify, visualize, and test partial associations between multiple ordinal variables.\n
+
+- [https://CRAN.R-project.org/package=MTE MTE]\n
+This package provides several robust estimators for linear regression and variable selection. They are Maximum tangent likelihood estimator ([https://arxiv.org/abs/1708.05439 Qin, et al. 2017]), least absolute deviance estimator, and Huber loss. The penalized version of each of these estimator incorporates L1 penalty function, i.e., LASSO and Adaptive Lasso. They are able to produce consistent estimates for both fixed and high-dimensional settings.

@@ -1,0 +1,22 @@
+# jemdoc: menu{MENU.txt}{research.html}
+= Shaobo Li — Research
+
+
+== Publications
+- Li, S., Fan, Z., Liu, I., Morrison, P, and Liu, D. (2024). Surrogate method for partial association between mixed data with application to well-being survey analysis. /Annals of Applied Statistics/, 18(3), 2254-2276.	\[[https://doi.org/10.1214/24-AOAS1879 paper]\]
+- Zhu, X., Li, S., Srinivasan K., and Lash, M. (2024). Impact of the COVID-19 Pandemic on the Stock Market and Investor Online Word of Mouth. /Decision Support Systems/, 176, 114074. \[[https://doi.org/10.1016/j.dss.2023.114074 paper]\]
+- Li, S., Schneider, M. J., Yu, Y., and Gupta, S. (2023). Re-identification Risk in Panel Data: Protecting for /k/-Anonymity. /Information Systems Research/, 34(3), 1066-1088. \[[paper/ISR-panel-data-k-anonymity.pdf paper]\]
+- Li, S., Tian, S., Yu, Y., Zhu, X., and Lian H. (2023). Corporate Probability of Default: A Single-Index Hazard Model Approach. /Journal of Business & Economic Statistics/, 41(4), 1288-1299. \[[paper/JBES-bankruptcy-single-index.pdf paper]\]
+- Sherwood, B. and Li, S. (2022). Quantile Regression Feature Selection and Estimation with Grouped Variables Using Huber Approximation. /Statistics and Computing/, 32(5), 1-16. \[[https://doi.org/10.1007/s11222-022-10135-w paper]\]
+- Li, S., Zhu, X., Chen, Y., and Liu, D. (2021). PAsso: an R package for Assessing Partial Association between Ordinal Variables. /The R Journal/, 13(2), 239-252. \[[https://journal.r-project.org/archive/2021/RJ-2021-088/index.html paper]\].  
+- Liu, D., Li, S., Yu, Y., and Moustaki, I. (2021). Assessing Partial Association between Ordinal Variables: Quantification, Visualization, and Hypothesis Testing. /Journal of the American Statistical Association/, 116(534), 955-968. \[[https://doi.org/10.1080/01621459.2020.1796394 paper]\] \[[https://CRAN.R-project.org/package=PAsso R package]\].
+- Schneider, M. J., Jagpal, S., Gupta, S., Li, S., and Yu, Y. (2018). A Flexible Method for Protecting Marketing Data: An Application to Point-of-Sale Data. /Marketing Science/, 37(1), 153-171. \[[https://doi.org/10.1287/mksc.2017.1064 paper]\].
+- Schneider, M. J., Jagpal, S., Gupta, S., Li, S., and Yu, Y. (2017). Protecting Customer Data: Marketing with Second-Party Data. /International Journal of Research in Marketing/,  34(3), 593-603. \[[https://doi.org/10.1016/j.ijresmar.2017.02.003 paper]\].
+
+
+== Working Paper
+- Quantile Predictions for Equity Premium using Penalized Quantile Regression with Consistent Variable Selection across Multiple Quantiles.
+- Penalized Maximum Tangent Likelihood Estimation and Robust Variable Selection. \[[https://arxiv.org/abs/1708.05439 arXiv]\].
+- Predicting Corporate Bankruptcy: A Penalized Semiparametric Index Hazard Model.
+
+
