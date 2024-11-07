@@ -32,7 +32,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 4973-FHPBZQ-AAA,Male,55,14,Service,No,23,No,80000,6.5,0.0312,5.1688,No,Unmarried,1,9,1,4,25,No,No,Visa,21,3940.2
 4726-RQKGNB-WAK,Female,60,18,Professional,No,13,No,51000,7.8,1.209312,2.768688,No,Married,2,2,0,2,26,Yes,No,Disc,38,1124.7
 6592-QBSENI-6Y4,Female,59,8,Sales,Yes,4,No,30000,2.8,0.26292,0.57708,No,Married,4,1,0,0,15,Yes,No,Visa,2,3421.7
-5538-DRGHIE-PF0,Male,28,11,,Yes,1,No,17000,8.2,0.150552,1.243448,Yes,Married,6,1,0,3,23,Yes,Yes,Mast,7,3811.4
 3550-PQUPPM-42T,Male,53,20,Sales,No,11,No,141000,9.9,9.589833,4.369167,No,Married,3,1,1,0,23,Yes,Yes,Disc,13,4459
 9809-NBCXAS-1RB,Male,36,12,Sales,No,5,No,45000,8.3,0.88893,2.84607,Yes,Unmarried,2,3,0,3,26,Yes,Yes,Disc,13,4611.5
 8733-EDAXNE-8DV,Male,47,20,Crafts,No,17,No,137000,13.7,3.303344,15.465656,No,Married,2,2,1,1,21,No,Yes,AMEX,29,4161.2
@@ -53,7 +52,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 5811-BKUTYY-F7I,Female,58,19,Labor,No,18,Yes,15000,7.6,0.08436,1.05564,No,Unmarried,1,4,0,1,20,No,Yes,Mast,19,650.8
 0926-OZQUQX-GXA,Male,35,11,Professional,Yes,5,No,17000,2.3,0.254932,0.136068,Yes,Married,4,4,1,1,24,No,No,Disc,17,1921.9
 5007-HXEVVL-NW5,Female,48,14,Professional,No,14,No,83000,11.3,4.820806,4.558194,No,Married,2,7,1,1,26,Yes,No,Disc,12,2204.6
-8101-YOBRYX-REF,Female,57,15,,No,8,No,82000,34.2,1.12176,26.92224,Yes,Unmarried,1,0,1,4,18,No,No,Mast,9,3718.1
 8267-UTARFV-TZK,Female,61,20,Service,No,11,No,62000,2.3,0.537602,0.888398,No,Married,4,2,1,0,23,No,Yes,AMEX,12,4158
 4432-KMTQXO-788,Female,56,19,Professional,No,6,No,138000,7,4.47258,5.18742,No,Married,2,0,0,5,19,No,Yes,Disc,35,6938
 9172-WITHKP-BXZ,Female,29,17,Sales,No,1,No,35000,5.7,1.079295,0.915705,No,Married,2,0,0,3,20,No,Yes,Mast,11,3630
@@ -90,7 +88,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 2566-HGSGRK-ROU,Male,59,18,Sales,No,7,No,68000,6.5,2.14812,2.27188,No,Unmarried,1,0,0,3,18,No,No,Disc,20,6026.7
 7164-HJCLUK-29N,Female,69,8,Professional,Yes,16,No,78000,12.7,6.68655,3.21945,No,Married,2,2,0,0,23,No,Yes,Disc,40,3649.4
 5052-NKTQMH-BKA,Female,43,13,Sales,No,2,No,38000,6.5,0.45448,2.01552,No,Unmarried,1,0,1,3,24,No,No,Mast,9,1312.1
-8802-ZPAEGX-52Q,Male,62,15,,No,7,No,56000,27.7,2.450896,13.061104,No,Married,3,0,0,2,21,No,Yes,Disc,27,4055.3
 0309-KOSUPM-CSV,Male,32,14,Professional,No,5,No,65000,14.1,4.133415,5.031585,Yes,Unmarried,1,1,1,2,27,No,Yes,Mast,7,3523.5
 8514-TCRHWV-DPM,Male,78,10,Crafts,No,28,Yes,17000,20.8,0.625872,2.910128,No,Unmarried,1,0,0,2,25,Yes,No,Visa,8,2700.4
 7441-RFDNVF-7SP,Male,64,15,Professional,No,11,No,62000,17.5,0.42315,10.42685,No,Married,2,0,1,3,25,Yes,Yes,AMEX,39,5054.5
@@ -161,7 +158,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 1191-EGQJHO-ZJQ,Female,63,15,Sales,No,9,Yes,17000,6.4,0.343808,0.744192,No,Married,2,9,1,3,22,No,No,Visa,17,86.5
 6237-IDDHKI-H17,Male,49,17,Sales,No,5,No,60000,8.4,1.20456,3.83544,Yes,Married,3,0,1,1,26,No,No,Disc,16,2375.2
 5085-RQHHUP-L2U,Female,51,12,Professional,No,8,No,122000,13.6,5.375808,11.216192,Yes,Married,2,9,1,4,37,No,Yes,Mast,12,2114.7
-2981-FYZXBF-DM9,Male,22,17,,No,0,No,32000,7.1,0.21584,2.05616,Yes,Unmarried,1,0,1,1,30,No,No,Disc,3,1469.2
 8446-TMJWQX-AK5,Male,51,12,Professional,No,8,No,43000,4.1,0.446039,1.316961,No,Married,2,0,1,4,27,No,No,Visa,31,2196.5
 1476-ZJSUZO-GSO,Female,53,16,Service,No,14,No,142000,13.6,3.340976,15.971024,No,Unmarried,1,5,0,2,25,No,No,Visa,7,4727.1
 9469-FWPWKV-HJY,Male,75,15,Crafts,No,31,Yes,123000,1.1,0.420783,0.932217,No,Married,2,0,1,2,29,No,Yes,Disc,35,1227.1
@@ -194,7 +190,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 7939-ERYSUF-ZB5,Female,51,14,Labor,No,18,No,74000,11.9,1.303288,7.502712,No,Married,4,2,1,1,33,No,No,Mast,18,1324.3
 0077-YFKJAV-D91,Female,56,18,Professional,No,3,No,129000,5.5,0.929445,6.165555,No,Married,2,9,1,1,23,Yes,Yes,Disc,13,2534.6
 6322-BPCXEI-Q4D,Female,46,16,Sales,Yes,4,No,56000,6.1,0.044408,3.371592,No,Unmarried,1,1,0,3,27,Yes,No,AMEX,9,1989.3
-7426-RJRFFK-CYX,Male,69,6,,No,19,No,59000,12.3,2.721375,4.535625,No,Married,2,5,1,1,14,Yes,Yes,Othe,35,2425
 1712-VZCJTW-W1K,Female,38,15,Crafts,No,8,No,36000,5.2,0.763776,1.108224,No,Married,2,1,1,2,13,No,No,Disc,7,2644.2
 3736-LXGHWH-QT3,Female,52,18,Professional,Yes,5,No,96000,29.3,6.553824,21.574176,Yes,Unmarried,1,0,1,3,26,No,Yes,Disc,23,1618.9
 8405-GXTJBV-W7N,Female,67,10,Service,No,35,Yes,22000,14.9,1.042404,2.235596,No,Unmarried,1,2,1,5,22,No,No,Visa,30,1124.4
@@ -255,7 +250,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 3401-LGDNVB-E53,Male,22,16,Sales,Yes,0,No,20000,3.8,0.22268,0.53732,Yes,Unmarried,1,2,0,4,22,No,Yes,AMEX,1,4973.5
 7670-PQQZMH-YSU,Male,30,17,Crafts,No,6,No,109000,18.4,1.464088,18.591912,No,Married,5,0,1,1,32,Yes,No,AMEX,11,7631.2
 3303-GJYFBQ-K1T,Male,66,9,Labor,No,33,Yes,88000,8.3,2.622136,4.681864,No,Unmarried,1,2,1,4,27,Yes,Yes,Visa,37,1691.5
-7971-YHMWIH-PAT,Male,42,11,,No,7,No,46000,11,1.30042,3.75958,No,Married,4,2,1,3,30,Yes,Yes,AMEX,24,5453.3
 4707-LKQWVH-DVB,Female,27,9,Labor,Yes,7,No,22000,9.1,0.106106,1.895894,No,Married,4,7,1,0,28,No,No,Visa,9,3447.6
 3743-WMVESG-C4C,Male,45,23,Sales,No,2,No,58000,9.6,1.158144,4.409856,No,Unmarried,1,11,0,2,25,No,Yes,Disc,2,5670
 6220-DNXMOB-3CJ,Female,75,16,Professional,No,8,No,28000,3.9,0.171444,0.920556,No,Unmarried,1,3,0,3,26,No,Yes,Mast,4,507.4
@@ -275,11 +269,8 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 8563-XFYTWE-1CH,Female,78,16,Professional,No,9,Yes,17000,9.5,0.644385,0.970615,No,Unmarried,1,0,0,2,26,No,No,Visa,10,1519
 6529-QAKUNP-XYF,Female,24,16,Professional,No,0,No,30000,4.4,0.37356,0.94644,No,Unmarried,1,2,1,4,19,No,No,Mast,6,1959.8
 2413-ECMIEM-PSY,Female,68,13,Professional,No,10,Yes,10000,4.2,0.27888,0.14112,No,Unmarried,1,5,1,3,30,No,No,Visa,17,2104.8
-4453-FAJXXO-IUV,,23,16,Crafts,No,1,No,26000,2.7,0.348894,0.353106,Yes,Married,3,8,1,4,32,No,Yes,AMEX,5,1956.1
 2952-JTVKHR-S7F,Female,22,11,Professional,No,1,No,23000,7.6,0.811072,0.936928,Yes,Married,4,0,1,4,30,Yes,No,Visa,4,2501
-1018-INNKLF-Y2Q,,52,8,Service,No,20,No,50000,4.2,0.3192,1.7808,No,Married,2,5,0,2,28,No,No,Othe,27,2350.5
 9700-DGCABT-FRY,Female,32,13,Sales,No,2,No,22000,5.4,0.070092,1.117908,No,Married,3,0,1,4,23,No,No,Mast,8,3738.5
-1092-JSLTHP-BCT,,49,16,Professional,No,9,No,60000,3.8,1.1058,1.1742,No,Unmarried,1,1,0,4,30,Yes,Yes,Visa,8,3465.8
 3011-YSOAMU-FQ2,Male,55,17,Labor,No,18,No,101000,14.6,6.326034,8.419966,Yes,Unmarried,1,2,1,4,20,No,No,Disc,36,6526.1
 7648-KAUMVM-HEU,Male,42,15,Sales,No,2,No,65000,5.8,2.25069,1.51931,Yes,Unmarried,1,2,1,1,22,No,No,AMEX,11,6068.9
 6891-ARDRVC-EWL,Female,65,11,Labor,No,30,Yes,32000,6.9,0.59616,1.61184,No,Unmarried,1,4,0,3,25,Yes,Yes,Visa,13,5630.7
@@ -291,7 +282,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 9176-YPUZOB-0X8,Male,49,13,Sales,No,2,No,37000,14.3,0.89947,4.39153,Yes,Unmarried,1,7,1,1,28,No,Yes,Mast,7,1522.6
 9393-XVJDYP-T0Y,Male,32,10,Service,No,10,No,30000,5.3,0.82362,0.76638,No,Married,5,4,1,2,31,No,Yes,Disc,14,2484.1
 3427-AFVORF-KSQ,Male,45,19,Crafts,No,12,No,83000,5.4,2.95812,1.52388,No,Unmarried,1,5,1,1,21,No,Yes,Visa,23,1356
-1804-PVZNPU-R1J,,19,14,Labor,No,0,No,43000,17.9,2.15516,5.54184,Yes,Unmarried,1,0,0,5,36,Yes,No,Mast,1,1143.1
 9357-NOWBWV-55T,Female,22,17,Labor,No,0,No,19000,3.5,0.08379,0.58121,No,Married,5,0,1,2,30,Yes,Yes,Visa,5,2956.5
 2613-HPXXOY-32A,Female,30,16,Service,No,3,No,64000,7.3,0.060736,4.611264,No,Married,2,6,1,3,28,No,No,Mast,13,2067
 5725-ECSRUB-X5V,Male,46,16,Labor,No,9,No,24000,1.3,0.140088,0.171912,No,Married,2,1,1,2,20,Yes,Yes,Visa,10,1992.7
@@ -313,7 +303,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 2591-HAWSSX-B1M,Male,39,17,Professional,No,5,No,50000,15.6,2.4648,5.3352,Yes,Unmarried,1,4,0,2,24,Yes,No,Mast,1,7567.6
 0044-LVJIBD-G76,Female,49,16,Professional,No,6,No,50000,6.5,1.2415,2.0085,No,Unmarried,1,3,0,5,28,Yes,No,Disc,15,1767
 8454-WYVBYJ-22N,Female,75,15,Professional,No,11,No,74000,2.8,1.32608,0.74592,No,Married,2,0,0,1,24,Yes,Yes,Mast,30,5299.6
-9769-TIWOIU-7YX,Male,29,13,,Yes,3,No,20000,9.3,0.26598,1.59402,No,Unmarried,4,0,1,1,25,Yes,Yes,Visa,7,3890.7
 9999-EGLHVE-19G,Male,32,16,Crafts,Yes,6,No,36000,13.4,0.472752,4.351248,Yes,Married,4,6,1,0,18,No,No,Disc,3,5263.7
 7731-TDRNOT-PZX,Male,23,15,Professional,No,0,No,64000,4.3,1.835584,0.916416,Yes,Married,5,0,1,2,22,No,No,Visa,5,2261.1
 4030-WSTXBV-BTC,Female,79,12,Sales,No,18,Yes,9000,7.8,0.385398,0.316602,No,Unmarried,1,6,1,4,30,Yes,No,AMEX,38,1440.1
@@ -906,7 +895,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 3292-NHKPUC-JVO,Male,79,10,Labor,No,35,Yes,11000,9.6,0.118272,0.937728,No,Married,2,2,0,2,24,No,No,Mast,38,528.3
 5175-ALHRGN-KAA,Female,49,13,Labor,No,18,No,38000,5.6,1.03208,1.09592,No,Married,2,6,0,2,22,No,No,Mast,31,1511.3
 5067-CTUQVG-TFM,Male,18,13,Crafts,No,0,No,13000,2.7,0.067041,0.283959,Yes,Unmarried,2,6,0,2,26,Yes,No,Visa,0,1963.6
-4685-EXMRPC-AHT,,20,15,Labor,No,0,No,24000,17.1,0.311904,3.792096,Yes,Married,5,2,1,2,28,Yes,No,Mast,2,2079.6
 0652-RYSBNB-4NU,Female,63,10,Sales,No,11,No,34000,2.9,0.13311,0.85289,No,Married,2,6,0,1,27,No,Yes,Visa,22,2870.3
 1098-DOZXBN-JSH,Male,67,14,Sales,Yes,16,No,114000,5.9,4.30464,2.42136,No,Married,2,3,1,2,28,Yes,Yes,AMEX,15,11651.7
 0198-WSNPJB-YZP,Female,73,10,Labor,No,28,Yes,9000,8.4,0.046116,0.709884,No,Married,2,0,1,3,28,No,No,Othe,35,1438.9
@@ -917,7 +905,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 0206-LHHZYR-TK2,Male,34,19,Labor,Yes,2,No,52000,4.3,0.802724,1.433276,No,Unmarried,1,2,1,3,21,Yes,Yes,Disc,15,765.5
 9088-RLQLGN-QEY,Male,43,15,Sales,No,5,No,62000,21.5,3.49246,9.83754,No,Married,5,1,1,3,18,No,No,Mast,19,4071.3
 9221-OXUFEY-119,Female,47,17,Sales,No,4,No,73000,1.5,0.303315,0.791685,No,Married,3,5,0,6,26,No,No,Disc,8,4328.7
-7325-MQSIAL-PMN,,32,17,Labor,No,4,No,27000,24.1,3.286035,3.220965,Yes,Married,2,2,0,1,27,No,No,Mast,14,1083.9
 9657-VOOLQE-XVR,Male,48,20,Professional,No,8,No,212000,14,10.44736,19.23264,Yes,Married,2,1,1,2,24,No,Yes,Disc,29,2657.4
 8167-NCGHOE-896,Female,34,15,Sales,No,2,No,49000,1.6,0.02744,0.75656,Yes,Married,3,2,1,2,27,No,No,Visa,7,1202.8
 6447-RZSOGA-5TJ,Female,33,19,Sales,No,1,No,48000,12.3,1.783008,4.120992,No,Married,6,4,1,3,28,No,No,Disc,15,1859
@@ -925,11 +912,9 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 8108-TVOBQR-T28,Male,47,19,Sales,Yes,6,No,111000,4.2,2.484846,2.177154,No,Married,5,0,1,2,26,Yes,Yes,AMEX,20,2661.9
 4215-NCRPOV-WJH,Male,45,20,Professional,No,3,No,58000,14.2,1.927224,6.308776,No,Married,5,7,0,1,20,No,Yes,Disc,3,2598.5
 6049-GTRGBC-A8O,Female,71,16,Professional,No,10,No,54000,10,1.7388,3.6612,No,Unmarried,1,9,0,5,19,Yes,Yes,Disc,32,1186.5
-3317-TIXDZH-Y89,,41,11,Service,Yes,14,No,55000,7.4,3.21937,0.85063,No,Married,2,1,1,2,22,Yes,Yes,AMEX,13,2672.1
 8217-TTOBPD-QXG,Female,65,15,Labor,No,27,Yes,29000,6,0.81606,0.92394,No,Unmarried,1,7,0,2,33,No,No,Visa,18,3717.2
 5465-RCVVOV-5OE,Male,76,22,Sales,No,9,Yes,9000,3.7,0.04662,0.28638,No,Married,2,12,0,2,23,No,No,Disc,31,1564.8
 7659-SLZWCO-IW8,Male,67,16,Professional,No,7,No,39000,18.4,1.521312,5.654688,No,Married,2,0,1,1,25,No,No,Disc,33,3056.3
-4726-UUKTZM-V4K,,63,13,Sales,No,11,Yes,10000,9.4,0.15792,0.78208,No,Married,2,2,1,2,19,Yes,No,Mast,28,1999.4
 9906-YUMMTT-90Q,Female,53,8,Professional,No,10,No,25000,6.8,0.7344,0.9656,No,Married,3,0,0,3,23,Yes,No,Visa,12,1230.4
 6653-HWCEVB-MHU,Female,41,11,Professional,Yes,10,No,40000,4.3,0.8858,0.8342,No,Married,4,6,0,2,31,No,No,Visa,13,1489.9
 4833-OONLQK-V96,Female,77,21,Labor,No,31,Yes,66000,20,6.0984,7.1016,No,Unmarried,1,7,1,0,35,No,Yes,Visa,38,2719.6
@@ -1357,7 +1342,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 5245-GTQIJJ-C89,Male,25,16,Labor,Yes,1,No,29000,13.9,0.495813,3.535187,No,Married,5,0,0,0,28,No,No,AMEX,5,2771.6
 7422-CULYVD-6HH,Female,75,11,Labor,No,24,Yes,48000,3,0.75456,0.68544,No,Unmarried,1,5,1,0,22,Yes,No,Mast,33,3692.3
 0644-DTJAYD-9JK,Female,39,18,Labor,No,6,No,38000,15.6,3.539016,2.388984,Yes,Married,5,1,1,0,25,No,No,Disc,4,913.6
-3021-BRYKZT-9EP,,41,14,Professional,No,8,No,37000,18.3,0.690642,6.080358,No,Married,2,0,1,5,28,Yes,Yes,Disc,3,2932.3
 2681-MOWKDD-1WV,Male,76,12,Sales,No,15,No,68000,9.6,2.813568,3.714432,No,Married,2,0,1,3,33,Yes,Yes,Disc,40,5116.9
 4658-VETXPI-KJJ,Female,53,20,Professional,No,8,No,88000,12.9,2.508792,8.843208,No,Married,2,8,0,0,21,Yes,No,Disc,35,1594.3
 7254-GKAZNV-X3I,Male,21,15,Sales,No,0,No,44000,8.3,1.29646,2.35554,Yes,Unmarried,3,1,0,1,29,Yes,Yes,Mast,3,3162.3
@@ -1370,14 +1354,12 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 3786-MCAVDN-WCA,Female,35,19,Professional,No,5,No,49000,15.9,2.02566,5.76534,Yes,Unmarried,1,5,1,2,20,No,Yes,Disc,5,1776.6
 6659-PCCIGW-S64,Male,22,15,Crafts,No,1,No,20000,3.1,0.23374,0.38626,No,Unmarried,1,0,0,4,30,Yes,Yes,AMEX,4,3550.8
 0375-GLYKLB-UWH,Female,51,8,Crafts,No,21,No,68000,14.8,2.385168,7.678832,No,Unmarried,1,1,0,7,22,No,No,Mast,9,1462.8
-2084-WBCKVO-E7E,,69,14,Service,No,25,No,72000,21.1,2.780136,12.411864,No,Unmarried,1,6,1,3,36,No,No,Visa,23,2308.8
 3644-HIVVTG-4X9,Male,34,18,Agriculture,No,7,No,29000,9.3,1.359288,1.337712,No,Unmarried,1,1,1,7,26,Yes,Yes,AMEX,13,2831.7
 0856-WIQVNW-8X9,Male,47,14,Labor,No,16,No,74000,13.4,4.601024,5.314976,No,Married,5,1,1,1,31,Yes,No,Mast,20,3442.9
 3281-LEIHNN-WXT,Female,77,14,Sales,Yes,13,Yes,10000,15.7,0.20253,1.36747,No,Unmarried,1,0,0,1,19,Yes,Yes,Visa,37,2890.2
 4166-FORUSS-SV2,Female,37,12,Sales,No,4,No,35000,2.3,0.4186,0.3864,Yes,Married,3,0,0,3,23,No,No,Visa,2,3672.7
 1189-ZTXTHP-D6Z,Male,75,23,Professional,No,14,No,68000,11.9,3.139696,4.952304,No,Unmarried,1,5,1,1,21,No,Yes,Disc,14,4207.9
 4718-PRPJMN-G18,Female,52,13,Sales,No,14,No,33000,18.3,2.500146,3.538854,No,Married,5,2,0,3,24,No,No,Mast,34,3415.2
-9491-FAHNZV-U05,,25,15,Crafts,No,3,No,16000,17.4,0.704352,2.079648,No,Married,5,7,1,2,27,No,Yes,AMEX,7,2265.2
 4375-QMTCGM-VAG,Male,46,12,Crafts,Yes,18,No,63000,19.8,3.941784,8.532216,No,Unmarried,1,0,0,3,18,Yes,No,Visa,29,1738.4
 6868-QULCZX-N11,Male,59,11,Labor,Yes,28,No,159000,11.3,6.216582,11.750418,No,Unmarried,1,0,1,3,25,Yes,Yes,Othe,40,16649.8
 6991-RPVZNV-2S4,Female,33,17,Labor,Yes,6,No,37000,9.3,0.726051,2.714949,No,Unmarried,2,0,1,1,26,No,No,Mast,15,3513.2
@@ -2019,7 +2001,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 4006-DKNBRW-0XC,Male,27,13,Professional,No,3,No,43000,7.6,0.901968,2.366032,Yes,Married,4,5,1,2,25,No,No,Mast,9,3542.7
 3932-BXYINB-Z8X,Male,67,8,Labor,Yes,30,Yes,81000,2,0.58158,1.03842,No,Unmarried,1,0,1,3,23,No,Yes,Mast,23,4269.1
 3772-GPSMXT-1YH,Male,33,17,Sales,Yes,1,No,47000,11.4,2.121768,3.236232,No,Unmarried,3,8,1,2,24,No,No,Disc,16,3334.3
-0883-XZQPJO-8Y7,Male,32,17,,Yes,1,No,40000,7.1,0.64468,2.19532,No,Unmarried,2,1,0,3,27,No,Yes,Disc,10,1087.6
 6363-BTCPXJ-NEO,Female,20,15,Service,No,0,No,28000,1.2,0.159936,0.176064,No,Married,4,3,1,2,25,No,No,Visa,2,3009.3
 9227-RCUKBO-V8N,Female,25,9,Labor,No,3,No,25000,11.3,1.8645,0.9605,No,Unmarried,1,0,1,1,33,No,No,Visa,3,2732.3
 1145-NMPFSU-3MP,Female,45,14,Sales,No,3,No,30000,13.6,2.1012,1.9788,No,Unmarried,1,2,1,2,22,Yes,Yes,Mast,17,2864.2
@@ -2045,7 +2026,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 1857-LALNZO-QLK,Male,38,19,Sales,No,4,No,41000,18.4,2.572504,4.971496,Yes,Unmarried,1,0,1,2,30,No,No,Visa,16,975.6
 7253-YCXANE-FJY,Male,30,12,Professional,No,3,No,36000,1.8,0.18144,0.46656,No,Married,6,1,0,0,28,Yes,Yes,Disc,6,1512
 7029-OMXAXD-Y2Q,Male,43,11,Sales,Yes,4,No,26000,1.5,0.06591,0.32409,No,Unmarried,1,0,1,3,26,No,Yes,AMEX,3,1347.5
-8318-FEMEWF-RX3,Male,73,15,,No,36,No,127000,2.5,0.860425,2.314575,No,Married,2,2,1,1,29,No,No,Disc,38,1603.5
 4050-BCFIUC-KUJ,Male,66,16,Service,No,21,No,52000,18.3,3.130764,6.385236,No,Married,2,0,1,2,20,Yes,No,AMEX,35,2343.8
 9321-FCPRGD-QA6,Female,66,15,Professional,No,15,No,71000,5.4,0.371898,3.462102,No,Unmarried,1,0,0,3,32,Yes,No,Disc,37,4525.1
 8838-HLCFUD-1RQ,Male,60,11,Sales,No,8,No,82000,13.2,5.379528,5.444472,No,Unmarried,1,2,1,4,21,No,No,Mast,22,4395.8
@@ -2071,7 +2051,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 6879-SZBXXQ-ERC,Female,58,16,Service,No,20,No,409000,6.7,6.987765,20.415235,No,Unmarried,4,4,1,1,24,Yes,Yes,Mast,17,12952.9
 3255-AGSHEO-6YB,Male,76,12,Service,No,28,Yes,12000,5.6,0.340704,0.331296,No,Unmarried,1,1,1,2,30,No,Yes,Mast,36,1700.9
 8461-SHTZXD-O8R,Female,33,13,Sales,No,5,No,52000,21.1,3.522012,7.449988,Yes,Married,4,2,1,5,37,No,No,Disc,15,2928.5
-0362-TRYKBE-0F1,Male,37,15,,No,3,No,58000,2.8,0.74704,0.87696,No,Married,2,1,1,1,16,No,Yes,Disc,4,2193.5
 6793-RYYHKO-1JV,Female,62,17,Professional,No,9,No,106000,15.1,5.185944,10.820056,No,Married,2,0,1,3,22,No,Yes,Disc,35,1925.4
 3553-XGNZFG-OB9,Male,33,15,Agriculture,No,5,No,30000,6.9,0.45126,1.61874,No,Unmarried,1,0,0,0,25,No,No,Disc,11,1234.9
 9137-TPLFSX-MUY,Male,53,9,Sales,Yes,7,No,29000,6.2,0.388368,1.409632,No,Unmarried,1,6,0,3,32,No,Yes,Mast,3,4448.5
@@ -2101,7 +2080,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 9449-DVAQCH-WQ2,Female,37,12,Professional,No,5,No,44000,13.3,1.158696,4.693304,No,Married,3,1,0,0,27,Yes,No,Visa,19,4905.9
 6896-NCSSOZ-ASJ,Male,74,16,Professional,No,13,Yes,16000,11.5,0.77464,1.06536,No,Married,2,8,1,1,34,No,Yes,Visa,34,3001.2
 9512-ESDUPH-9LX,Male,37,18,Sales,No,3,No,49000,8.2,2.274188,1.743812,No,Married,2,14,1,0,23,No,Yes,Disc,14,8123.8
-7521-YFMYFC-J0A,Male,61,12,,No,16,No,118000,3.6,2.068776,2.179224,No,Married,4,1,1,3,11,No,Yes,Mast,40,6745.4
 9064-DHJRVC-0SG,Male,79,13,Professional,Yes,34,Yes,16000,7.9,0.376672,0.887328,No,Unmarried,1,8,0,2,15,Yes,No,Mast,37,3501.8
 3010-KVHEBF-9GL,Female,38,18,Sales,No,1,No,49000,23.5,4.95145,6.56355,Yes,Unmarried,2,2,1,3,25,No,No,AMEX,3,7958.8
 5244-AWFIPA-DWJ,Male,61,12,Labor,No,32,No,146000,7.9,5.386378,6.147622,No,Unmarried,1,0,1,3,27,No,Yes,Disc,31,4080.5
@@ -2137,7 +2115,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 5106-JTUNGC-1VO,Male,53,9,Service,No,20,No,51000,13.7,2.005269,4.981731,No,Married,6,5,0,1,28,No,Yes,AMEX,18,3806.4
 0149-MDXYXQ-WTU,Female,24,11,Professional,No,1,No,34000,10.4,1.142128,2.393872,Yes,Married,5,3,0,3,36,No,No,Mast,6,6855
 6725-PUIEGJ-LR7,Male,78,21,Labor,No,28,Yes,25000,8.3,0.944125,1.130875,No,Unmarried,1,9,0,1,22,No,No,Visa,40,1662.1
-6553-IAQEZM-EDF,Female,33,14,,No,4,No,35000,18.4,2.78852,3.65148,No,Married,2,3,1,1,16,No,Yes,Disc,15,2364.9
 4018-QXZCGI-O4Q,Male,78,12,Sales,No,15,Yes,13000,4.4,0.219076,0.352924,No,Married,2,0,1,2,31,No,No,Disc,38,962.4
 5998-OKHKEK-0A3,Male,24,19,Sales,No,0,No,32000,4.2,0.231168,1.112832,Yes,Married,3,0,0,1,16,Yes,No,Mast,7,1991.5
 4742-XFCJNI-UJK,Female,26,14,Crafts,No,3,No,29000,3.6,0.01044,1.03356,No,Married,2,2,0,2,23,No,Yes,AMEX,8,4192.8
@@ -3178,7 +3155,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 6429-GMGFFW-Y6O,Female,47,16,Labor,No,11,No,39000,4.3,0.293475,1.383525,No,Married,3,8,1,2,24,Yes,No,Mast,29,1034
 4406-CWASGT-8EZ,Female,19,14,Labor,No,0,No,35000,8.1,0.428085,2.406915,Yes,Married,3,0,0,2,19,No,Yes,Visa,1,3638.4
 4758-RMVWIA-XO1,Male,41,9,Crafts,No,5,No,21000,8.5,0.890715,0.894285,No,Married,4,1,1,2,23,No,No,Visa,16,2990.1
-9646-NHVEEJ-VZ9,Female,68,15,,No,5,Yes,17000,16.8,1.445136,1.410864,No,Unmarried,1,4,1,2,28,Yes,Yes,Visa,24,1414.3
 7607-GRPLIE-C1J,Female,27,14,Professional,No,2,No,21000,9,0.10962,1.78038,No,Unmarried,5,0,1,1,19,No,Yes,Mast,3,489.6
 0238-VGATLL-U7B,Male,78,9,Labor,No,44,Yes,25000,18,1.089,3.411,No,Married,2,0,1,4,31,No,No,Disc,40,4528.8
 9257-UGOWQJ-0GM,Male,51,19,Sales,No,5,No,54000,18.8,1.238544,8.913456,No,Unmarried,3,2,1,3,31,No,Yes,Disc,29,1232.8
@@ -3215,18 +3191,9 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 7940-UVUDPX-QP3,Female,31,15,Professional,No,3,No,31000,5.6,0.6944,1.0416,No,Unmarried,1,0,1,1,25,Yes,Yes,Disc,8,1238.2
 3091-BMFVLO-58H,Female,51,15,Labor,No,11,No,43000,4.4,0.940324,0.951676,No,Unmarried,2,1,0,1,28,Yes,No,Disc,34,4497
 5622-MJXUZI-PZ7,Male,27,21,Service,Yes,0,No,23000,12.1,0.731929,2.051071,Yes,Married,2,5,0,1,33,Yes,Yes,Disc,9,1697
-1860-OQTJHA-G67,Male,77,12,,No,10,Yes,17000,0.3,0.014433,0.036567,No,Married,2,0,0,2,28,No,No,Mast,37,1669.3
 4007-HKDFMC-S6B,Female,54,12,Crafts,No,8,No,41000,7.4,0.351944,2.682056,No,Unmarried,1,2,1,3,29,Yes,Yes,Mast,10,1795.4
 0014-SHVSIE-LP9,Male,39,19,Professional,No,8,No,92000,11,3.02588,7.09412,No,Unmarried,3,0,1,0,20,No,Yes,Mast,7,2264.8
 1110-ARKUEK-2N1,Female,69,16,Professional,No,10,Yes,13000,4,0.19812,0.32188,No,Unmarried,1,8,0,1,19,No,Yes,Visa,13,2602.2
-7061-NNEUTF-LVY,,29,15,Professional,No,3,No,27000,15.3,0.603126,3.527874,Yes,Unmarried,3,0,1,3,31,No,Yes,Mast,4,4204
-8347-DIRIVI-L25,,45,7,Sales,No,6,No,37000,4.4,0.232804,1.395196,No,Unmarried,1,0,0,2,25,No,No,Visa,11,2715.9
-2177-DBXQEF-6ZN,,47,7,Labor,No,22,No,92000,20.2,3.140696,15.443304,No,Married,2,0,1,3,37,No,No,Disc,29,1108.9
-4466-QZDRDY-3Q5,,32,20,Sales,No,0,No,48000,2.3,0.321264,0.782736,No,Unmarried,3,0,1,2,28,No,No,AMEX,3,5972.8
-4163-ELNRLS-L26,,35,14,Service,Yes,9,No,72000,3.4,0.619344,1.828656,No,Unmarried,1,3,1,7,23,No,Yes,Mast,8,1809.5
-9121-JUBJOI-RVF,,31,17,Professional,No,2,No,17000,13.2,0.899844,1.344156,No,Unmarried,1,1,1,1,30,No,No,Visa,11,1599.8
-7167-GGLBZF-G13,,68,8,Professional,No,16,No,56000,2.7,0.343224,1.168776,No,Unmarried,1,1,1,0,24,Yes,No,Visa,14,3395.5
-8554-MORPOB-UFV,,56,15,Professional,No,21,No,82000,16.4,0.80688,12.64112,No,Married,6,0,1,4,19,Yes,Yes,Disc,17,5759.6
 4419-QJJUZT-N91,Female,60,9,Professional,Yes,15,No,44000,15.5,2.5575,4.2625,No,Married,2,0,1,2,29,No,No,Visa,35,1458.4
 9522-BFLYJM-P8U,Male,40,18,Professional,No,4,No,39000,6.4,1.240512,1.255488,No,Married,4,1,1,0,25,Yes,Yes,Disc,22,1811.2
 0597-RNYRKL-5WV,Female,68,15,Sales,No,10,No,36000,11.6,0.931248,3.244752,No,Unmarried,1,0,1,3,25,No,Yes,Mast,39,3627.2
@@ -3241,7 +3208,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 8731-TFXZCT-ERX,Male,41,15,Service,No,12,No,68000,13.9,1.975468,7.476532,No,Unmarried,2,1,1,3,23,Yes,Yes,Mast,3,4868
 0304-YFMNUF-R3Q,Male,56,20,Agriculture,No,19,No,183000,14.3,2.276703,23.892297,No,Unmarried,1,0,0,3,33,No,No,Mast,7,3602.7
 2374-TMXFAH-LDY,Female,39,20,Sales,Yes,1,No,43000,12.7,0.775462,4.685538,No,Married,2,1,0,2,24,No,Yes,Visa,13,1766.7
-2126-NKWFLM-XQV,Female,61,12,,No,20,No,40000,18.7,2.22904,5.25096,No,Married,3,7,1,1,29,Yes,Yes,Mast,33,1804.2
 2638-CHUZHQ-P08,Male,49,17,Sales,No,3,No,69000,6.7,0.466923,4.156077,No,Married,3,1,1,2,38,Yes,No,Disc,16,3355.6
 2022-QSGNVJ-R6O,Male,61,18,Sales,No,1,Yes,9000,6.5,0.24102,0.34398,No,Unmarried,1,1,0,1,20,Yes,No,AMEX,3,2198
 1414-AAECEB-G5D,Female,41,15,Crafts,No,13,No,54000,5.1,0.801414,1.952586,No,Unmarried,3,3,0,1,26,Yes,Yes,Visa,12,2372.8
@@ -3250,7 +3216,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 0561-UFDIXT-TF7,Female,52,11,Professional,No,9,No,47000,0.7,0.132587,0.196413,No,Married,2,2,1,3,16,Yes,No,Mast,16,1291.5
 6519-AFCJLQ-H0F,Female,35,14,Service,No,6,No,60000,0.2,0.0234,0.0966,No,Married,5,14,1,2,35,Yes,Yes,Mast,14,3496.8
 9569-DANQUD-TAG,Female,33,16,Sales,No,2,No,35000,1.7,0.24395,0.35105,No,Married,2,0,0,3,24,Yes,Yes,Disc,5,1755.9
-1840-PAPXFC-DUM,,34,16,Professional,No,2,No,51000,3.5,1.062075,0.722925,Yes,Married,4,1,1,3,21,No,Yes,Visa,16,1269.3
 0218-IHFKWL-FJ8,Male,54,16,Professional,No,11,No,30000,17.3,1.44801,3.74199,No,Married,2,0,1,0,25,No,No,Disc,36,2425.9
 2549-CSINBN-EUH,Male,75,11,Professional,No,10,No,40000,11.6,0.1856,4.4544,No,Married,2,1,0,1,29,No,No,Visa,38,2699.1
 1857-XUGESY-CPO,Male,71,20,Professional,No,11,No,68000,3.8,1.436704,1.147296,No,Unmarried,1,0,0,1,26,Yes,Yes,Disc,14,3343.4
@@ -3266,7 +3231,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 9038-ZUXFBH-IV4,Female,38,10,Professional,No,3,No,38000,9.6,0.558144,3.089856,Yes,Married,5,7,0,2,20,No,Yes,Visa,2,1381.2
 5634-ILCZWC-WLW,Female,75,11,Sales,No,7,Yes,14000,11.4,0.563388,1.032612,No,Unmarried,1,1,1,1,25,No,Yes,Visa,18,2950.9
 8460-OGDRTP-BQT,Female,62,13,Professional,No,16,No,157000,12.2,3.73503,15.41897,No,Unmarried,1,6,0,0,24,No,No,Mast,37,1814.8
-9056-AHASYK-1IF,,53,14,Sales,No,2,No,18000,15.9,0.220374,2.641626,No,Married,7,0,1,2,27,No,No,Mast,18,1172.8
 4738-EVGEFI-FIM,Female,51,15,Professional,Yes,12,No,122000,2.6,0.80886,2.36314,No,Married,2,8,0,2,38,Yes,Yes,Visa,33,2993.9
 1668-DEBFLG-JZW,Male,61,11,Crafts,No,26,No,232000,2.5,3.4742,2.3258,No,Married,2,5,1,2,40,No,Yes,Disc,40,8575
 3243-XMXUQF-TC4,Male,56,18,Service,No,13,No,34000,6.5,1.12489,1.08511,No,Married,3,2,1,4,24,No,Yes,AMEX,27,3884.7
@@ -3317,7 +3281,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 2437-RNSZSY-BV4,Male,74,15,Crafts,No,22,Yes,12000,1.6,0.086592,0.105408,No,Married,2,8,0,2,27,Yes,Yes,Visa,39,1650.2
 3981-RDXPBC-286,Female,22,17,Crafts,No,0,No,30000,9.5,0.456,2.394,No,Married,3,1,1,5,39,No,Yes,Visa,4,1922.1
 8665-ZTJWBH-V5O,Male,46,17,Labor,No,14,No,75000,6.9,2.1321,3.0429,No,Unmarried,1,4,1,1,31,No,No,Mast,29,1952.4
-3021-VWVAPW-MHM,,32,10,Sales,No,3,No,47000,9.6,1.303968,3.208032,No,Married,2,3,1,4,17,No,Yes,Visa,9,2436
 8182-OLKIOC-XUO,Male,34,18,Labor,No,6,No,49000,14.1,1.250529,5.658471,Yes,Unmarried,1,0,0,2,26,No,No,Disc,9,1857.5
 4111-GNYNUK-45B,Male,29,17,Professional,No,2,No,30000,13.5,1.1421,2.9079,Yes,Unmarried,1,0,1,2,39,No,Yes,Mast,11,1186.8
 5743-RWLCZY-OZ0,Female,72,10,Professional,No,15,No,59000,8.3,2.825569,2.071431,No,Married,2,4,0,2,16,No,No,Othe,25,4312.6
@@ -3339,7 +3302,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 1665-DSLMVE-DNW,Female,36,16,Sales,No,2,No,33000,6.2,1.315578,0.730422,No,Married,4,1,1,3,24,Yes,No,Disc,6,1413.9
 0726-QUJOIN-PEY,Female,23,11,Labor,No,4,No,18000,0.8,0.012096,0.131904,No,Unmarried,3,0,0,3,27,No,No,Visa,5,838.1
 0613-MFCCPI-HVF,Male,76,14,Professional,Yes,27,Yes,10000,7.4,0.12062,0.61938,No,Married,2,4,1,2,21,Yes,No,AMEX,36,1162.2
-4010-BNQGZR-YWI,,27,18,Crafts,No,2,No,38000,17.9,1.673292,5.128708,No,Unmarried,1,0,0,2,28,No,Yes,Mast,6,3691.2
 0764-VXLXJM-XSA,Female,66,17,Professional,No,11,No,34000,9.3,1.037136,2.124864,No,Unmarried,1,2,0,1,24,No,Yes,Mast,17,2116.2
 3728-ELNOUE-F95,Male,26,16,Crafts,No,4,No,34000,24.2,3.241832,4.986168,Yes,Unmarried,1,15,1,2,18,No,Yes,Disc,1,2159
 9062-KQMRAP-J7W,Female,73,15,Sales,No,13,Yes,15000,6.2,0.48081,0.44919,No,Unmarried,1,4,1,1,23,No,No,Disc,27,2051.5
@@ -3363,7 +3325,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 9170-DWFWOA-P5A,Male,23,10,Service,No,4,No,39000,6.8,0.270504,2.381496,No,Married,4,0,0,1,29,No,No,AMEX,5,5754.4
 8678-YSAVQI-BUM,Male,32,19,Sales,No,1,No,81000,9.2,3.435372,4.016628,No,Married,2,0,1,2,24,Yes,Yes,Disc,5,6426
 7564-JIJMLK-ZWE,Female,24,19,Professional,No,0,No,31000,8.8,1.271248,1.456752,No,Married,3,0,0,1,20,No,No,Disc,4,1309.2
-2857-XPJXUP-XV2,,78,12,Service,No,31,Yes,26000,6.6,0.509652,1.206348,No,Unmarried,1,0,0,0,20,No,No,Visa,24,2081.5
 5190-YTIALY-9Y8,Male,57,15,Professional,No,8,No,220000,11.3,14.56796,10.29204,Yes,Married,2,9,1,3,24,No,Yes,AMEX,34,2244.5
 3039-KWGRLO-WVL,Female,37,17,Labor,No,9,No,150000,5.4,4.7466,3.3534,Yes,Married,3,0,1,4,32,Yes,Yes,AMEX,12,39264.1
 4991-FBLNBW-UZK,Female,25,15,Professional,No,2,No,32000,4.4,0.368896,1.039104,No,Married,4,0,1,1,23,Yes,No,Disc,8,593.5
@@ -3390,7 +3351,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 0466-PHYEYE-T4Y,Male,69,17,Professional,No,9,No,55000,12.3,1.305645,5.459355,No,Married,2,0,1,0,23,Yes,No,Mast,24,8096.6
 4426-DSOKTB-1N2,Female,46,20,Professional,No,6,No,84000,9.2,1.723344,6.004656,Yes,Unmarried,1,1,1,3,26,Yes,Yes,AMEX,29,11598.4
 6982-UGFDOW-TVK,Female,57,15,Professional,No,16,No,62000,8.7,0.21576,5.17824,No,Unmarried,1,0,1,2,26,Yes,Yes,Disc,11,4002.7
-4901-HTMNYZ-I0V,,34,14,Professional,No,3,No,25000,24.4,1.8483,4.2517,No,Married,3,1,1,2,30,Yes,Yes,Disc,17,1401.2
 6954-YFASVE-VEN,Male,41,9,Sales,No,1,No,21000,5.1,0.336294,0.734706,No,Unmarried,1,13,0,4,21,Yes,No,Othe,6,3769.2
 7667-XPSSNP-TPD,Male,53,15,Service,No,21,No,144000,19.4,16.035264,11.900736,Yes,Married,3,1,1,2,32,Yes,Yes,AMEX,22,11053.3
 5148-ANRWKZ-IWQ,Male,57,18,Sales,No,6,No,146000,17.4,12.346344,13.057656,Yes,Married,4,0,1,3,35,No,Yes,Visa,9,14452.1
@@ -3415,7 +3375,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 5636-UJZIJB-AU6,Male,36,16,Sales,No,3,No,38000,15.4,1.626856,4.225144,Yes,Married,2,0,0,4,24,Yes,No,Disc,2,4613.8
 7561-IZQWWU-V05,Male,35,14,Sales,No,2,No,33000,10,2.3331,0.9669,Yes,Unmarried,2,0,1,1,31,No,No,Visa,4,2356.3
 8864-PBWBSD-69M,Female,39,11,Professional,No,4,No,31000,1,0.10633,0.20367,No,Unmarried,1,2,0,0,17,No,No,AMEX,21,2419.8
-8662-KFTSLI-UZC,,78,21,Labor,No,38,Yes,49000,19.4,4.458314,5.047686,No,Unmarried,1,0,0,1,26,No,Yes,Mast,40,2350.1
 5134-OOKFBJ-C7O,Male,47,18,Professional,No,14,No,153000,10.3,5.105916,10.653084,No,Married,2,9,1,2,19,No,Yes,Disc,28,8763
 9381-NJFFUU-00K,Male,73,21,Labor,Yes,19,No,126000,3,0.97902,2.80098,No,Married,2,8,0,3,12,No,Yes,Disc,34,2108.8
 2471-TNJMEJ-2MB,Male,19,14,Crafts,No,0,No,33000,7.5,0.3069,2.1681,Yes,Unmarried,5,0,0,5,30,Yes,Yes,Disc,1,730.6
@@ -3440,7 +3399,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 7781-CDOKMV-OE3,Female,57,16,Professional,No,11,No,72000,13.6,5.620608,4.171392,Yes,Unmarried,1,2,1,3,23,Yes,Yes,Disc,35,3585.4
 6573-XMZZJW-DXC,Female,52,13,Sales,Yes,4,No,57000,3.2,0.341088,1.482912,No,Unmarried,3,6,1,2,34,No,No,Disc,16,2714.7
 6730-IXOWRR-TS8,Male,29,20,Crafts,No,1,No,34000,9.3,0.746232,2.415768,Yes,Married,2,2,1,0,28,Yes,No,AMEX,9,4632.2
-4383-DCJKQQ-CT1,,48,10,Sales,No,1,No,28000,5.5,0.4081,1.1319,Yes,Married,2,4,1,5,18,No,No,Mast,16,2799.7
 7032-SECKLI-CWG,Female,54,15,Labor,No,19,No,147000,3.9,0.991809,4.741191,No,Unmarried,1,0,1,3,18,No,Yes,Disc,32,5026
 9770-ERDOON-B3Y,Male,31,14,Sales,No,1,No,30000,18.9,2.51181,3.15819,Yes,Married,3,0,0,2,16,No,No,Visa,3,3384.9
 3485-BOPLMV-12Y,Female,36,21,Professional,Yes,2,No,31000,18.4,1.095168,4.608832,Yes,Unmarried,3,10,1,1,20,Yes,Yes,AMEX,12,2736
@@ -3470,7 +3428,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 8090-BKNAEV-UUS,Female,43,13,Sales,No,2,No,50000,10.2,1.7799,3.3201,Yes,Married,7,0,0,2,24,Yes,No,Visa,14,2403.8
 6879-ZGVFLD-N41,Female,31,14,Sales,No,3,No,68000,8.9,1.325388,4.726612,No,Married,2,1,1,2,29,Yes,No,Mast,12,2242.1
 5503-ESRRSB-70Q,Male,39,18,Sales,No,3,No,85000,3.8,0.92701,2.30299,No,Unmarried,3,1,1,4,25,No,No,AMEX,1,6190.2
-7804-LNTQAT-8AG,,52,12,Professional,No,6,No,38000,21.7,1.385328,6.860672,Yes,Unmarried,2,0,0,1,15,No,No,Visa,6,891.2
 7593-NPWRNN-5W9,Male,29,21,Sales,No,0,No,62000,1.4,0.265608,0.602392,Yes,Unmarried,1,7,1,1,29,Yes,Yes,Disc,9,3261.5
 3524-ABXGIP-78T,Male,72,17,Labor,No,23,Yes,30000,5.4,0.7209,0.8991,No,Married,2,0,1,2,30,Yes,No,AMEX,38,3059.4
 3180-EYJVZK-CIO,Male,54,12,Service,Yes,19,No,76000,4.9,1.523116,2.200884,No,Married,2,1,0,2,29,Yes,Yes,Disc,30,4574.9
@@ -3631,7 +3588,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 6664-DBKIDC-ZBB,Female,62,14,Crafts,No,36,No,283000,15.4,24.580248,19.001752,Yes,Unmarried,1,8,1,3,18,Yes,Yes,Disc,35,3107
 8754-ZYGJGX-J6Z,Female,24,19,Sales,No,0,No,22000,7.1,0.693528,0.868472,No,Married,4,2,1,2,25,No,No,AMEX,6,9876.9
 4520-FSACMY-WGN,Male,40,16,Service,No,10,No,168000,10.8,4.771872,13.372128,No,Unmarried,1,5,1,3,22,Yes,Yes,AMEX,18,10796.3
-8751-OQXFAA-J60,,23,16,Service,No,0,No,15000,10.5,0.080325,1.494675,Yes,Unmarried,4,0,0,2,18,No,Yes,Visa,5,3710
 9550-SLQHEY-UP0,Male,42,17,Professional,No,5,No,45000,18.6,1.59867,6.77133,Yes,Married,4,12,1,0,16,No,No,AMEX,13,3852.4
 9231-CESRRQ-MPY,Male,21,16,Professional,No,0,No,43000,4.9,1.076677,1.030323,No,Married,6,2,1,2,27,No,No,Othe,1,11115.4
 5382-ISEYFG-B07,Female,36,17,Sales,No,1,No,69000,7.6,2.317848,2.926152,No,Unmarried,1,1,1,2,27,Yes,Yes,Disc,13,1396
@@ -3683,7 +3639,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 2683-DBNVBL-NWC,Female,68,15,Professional,No,14,Yes,10000,3.9,0.11622,0.27378,No,Married,2,0,1,2,24,Yes,Yes,Mast,17,3541.1
 7355-UODSBR-6W5,Female,40,21,Sales,No,3,No,88000,6.4,2.010624,3.621376,Yes,Married,2,0,1,2,25,No,Yes,Visa,22,7554.5
 6100-RHTRZH-W99,Female,52,10,Service,No,12,No,67000,23.2,6.932624,8.611376,Yes,Unmarried,1,0,0,2,19,Yes,Yes,Disc,22,3315.8
-8680-CAWJBT-YV6,,67,13,Sales,No,6,Yes,16000,33.8,1.806272,3.601728,No,Married,3,0,1,3,17,Yes,No,Disc,25,1846.6
 8056-NQNZGC-J01,Male,45,12,Sales,Yes,3,No,50000,2.3,0.1219,1.0281,No,Married,4,10,0,2,35,Yes,Yes,Disc,5,3676
 4912-DJHONI-IRD,Male,67,11,Professional,No,8,No,57000,11,1.96878,4.30122,No,Married,2,1,1,3,29,No,No,Mast,30,8336.3
 1939-FFNTHQ-TG5,Female,28,13,Sales,No,1,No,45000,4.4,0.3564,1.6236,No,Unmarried,1,0,1,1,18,Yes,No,Visa,8,3569.3
@@ -3729,7 +3684,6 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 9376-KIITIR-4VN,Female,57,13,Professional,No,9,No,47000,10.3,1.219932,3.621068,No,Married,6,12,0,1,31,Yes,Yes,Mast,34,3312.6
 9889-KISZOV-DGP,Female,48,13,Sales,No,7,No,45000,2.3,0.311535,0.723465,No,Married,3,0,1,3,26,Yes,No,Mast,31,2238.1
 5240-DIDRFM-4O3,Male,76,14,Professional,No,11,No,36000,9,0.75816,2.48184,No,Married,2,5,1,4,22,No,No,Disc,38,2331.2
-5074-CYFMOK-K4T,,59,19,Sales,No,8,No,28000,6.8,0.138992,1.765008,No,Unmarried,1,1,0,3,26,No,Yes,Disc,6,223.7
 1167-TMYMHM-O7N,Male,45,20,Service,No,6,No,65000,7.4,1.28427,3.52573,No,Unmarried,1,1,1,3,21,No,No,AMEX,25,13086.3
 2735-PDKKEG-P4W,Female,68,8,Professional,No,14,No,43000,14.7,2.585289,3.735711,No,Unmarried,1,7,0,3,20,Yes,No,Mast,19,3431.6
 0868-HVDQLI-HF1,Female,50,14,Service,No,12,No,48000,11.5,1.39104,4.12896,No,Married,2,0,1,2,23,Yes,Yes,Visa,25,1152
@@ -3769,10 +3723,8 @@ CustomerID,Gender,Age,EducationYears,JobCategory,UnionMember,EmploymentLength,Re
 6745-XOSOPD-7QB,Male,35,16,Service,No,7,No,19000,5.4,0.316008,0.709992,No,Unmarried,4,0,1,0,32,No,No,Visa,17,1607.2
 3345-ECUNPH-BRC,Male,56,11,Professional,No,2,No,35000,6.8,0.4403,1.9397,No,Unmarried,1,2,1,2,25,No,No,Mast,9,3220.2
 9806-FPJFJU-VT8,Male,24,11,Sales,No,1,No,15000,13.8,0.29394,1.77606,Yes,Unmarried,1,5,1,2,26,Yes,No,AMEX,1,2491.6
-1682-XDZYGW-C0V,,63,9,Sales,No,5,No,31000,22,2.4211,4.3989,No,Unmarried,1,13,0,1,29,No,Yes,Mast,22,1426.6
 9482-DUHRYC-8XB,Male,50,12,Sales,No,4,No,27000,5.9,0.100359,1.492641,No,Unmarried,1,0,1,1,24,No,No,AMEX,7,3421.9
 8752-ILSFDO-GD9,Male,62,19,Sales,No,2,No,27000,3.4,0.264384,0.653616,No,Married,2,5,1,2,27,No,Yes,Disc,34,2553.8
-4995-LHPQCW-XK1,,67,12,Labor,No,33,No,193000,24.4,15.634544,31.457456,No,Unmarried,1,0,0,3,30,Yes,Yes,Disc,39,3937.9
 5786-JJYPPE-HFO,Female,47,15,Sales,No,3,No,39000,0.9,0.217269,0.133731,No,Married,5,0,1,0,28,No,No,Othe,2,1626.8
 9621-GVBWNE-B55,Male,36,20,Professional,No,3,No,46000,6.9,2.19006,0.98394,Yes,Married,2,12,0,3,15,Yes,Yes,Mast,18,3917.5
 8133-JPYKOC-BOA,Male,52,16,Professional,No,6,No,79000,29.2,15.45556,7.61244,Yes,Unmarried,3,0,1,3,19,No,Yes,Visa,22,9741.5
