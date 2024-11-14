@@ -1,0 +1,20 @@
+set.seed(750)
+n <- 200
+p <- runif(n)
+y <- rbinom(n,1,p)
+head(cbind(y,p))
+
+pcut <- seq(0.1,0.9,0.05)
+v1<- NULL
+for(i in 1:length(pcut)){
+  yhat <- (p>pcut[i])*1
+  confMat <- table(y,yhat,dnn = c("True", "Pred"))
+  TPR <- sum(y==1 & yhat==1)/sum(y==1)
+  TNR <- 
+  FPR <- 
+  FNR <- 
+  Precis <- 
+  v1 <- rbind(v1, c(TPR=TPR, TNR=TNR, FPR=FPR, FNR=FNR, Precis=Precis))
+  cat("pcut:", pcut[i], "TPR:", TPR, "TNR:", TNR, "FPR:", FPR, "FNR:", FNR, "Precision", Precis, '\n')
+  print(confMat)
+}
