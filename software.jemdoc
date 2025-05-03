@@ -9,3 +9,11 @@ An implementation of the unified framework for assessing partial association bet
 
 - [https://CRAN.R-project.org/package=MTE MTE]\n
 This package provides several robust estimators for linear regression and variable selection. They are Maximum tangent likelihood estimator ([https://arxiv.org/abs/1708.05439 Qin, et al. 2017]), least absolute deviance estimator, and Huber loss. The penalized version of each of these estimator incorporates L1 penalty function, i.e., LASSO and Adaptive Lasso. They are able to produce consistent estimates for both fixed and high-dimensional settings.
+
+= AI apps
+
+- [https://huggingface.co/spaces/lishaobo413/teaching-eval-cleaner Teaching Evaluation Extractor]
+
+
+
+
