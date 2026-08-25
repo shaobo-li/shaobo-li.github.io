@@ -693,6 +693,10 @@ def replacelinks(b):
     link = quote(link)
     link = mathjaxussub(link)  # to prevent _ in address from changing
 
+    # force download for notebook files instead of rendering raw JSON.
+    if link.lower().endswith('.ipynb'):
+      option += ' download'
+
     if m.group(2):
       linkname = m.group(2).strip()
     else:
