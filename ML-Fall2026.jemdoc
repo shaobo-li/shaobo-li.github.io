@@ -29,25 +29,13 @@
 
 - [Teaching/Lecture/2026/1_Intro.pdf Lecture 1]
 - [Teaching/Lecture/2026/2_SimpleAlgorithms.pdf Lecture 2]
-- [Teaching/Lecture/2026/3_LinearReg.pdf Lecture 3]
-- [Teaching/Lecture/2026/4_VarSelection.pdf Lecture 4]
-- [Teaching/Lecture/2026/5_LogisticReg.pdf Lecture 5]
-- [Teaching/Lecture/2026/6_tree.pdf Lecture 6]
-- [Teaching/Lecture/2026/7_nnet.pdf Lecture 7]
 
 
 
-== R Lab Notes
+== Lab Notes
 
-- [Teaching/Lab/2026/lab1_intro.html Lab 1. Introduction to R]
-- [Teaching/Lab/2026/lab2_eda.html Lab 2. Exploratory data analysis]
-- [Teaching/Lab/2026/lab3_simpleML.html Lab 3. k-means and k-nearest neighbor]
-- [Teaching/Lab/2026/lab4_lm.html Lab 4. Linear Regression]
-- Lab 5. Variable Selection and Regularized Method \[[Teaching/Lab/2026/lab5_VarSel1.html Part1]\] \[[Teaching/Lab/2026/lab5_VarSel2.html Part2]\]
-- [Teaching/Lab/2026/lab6_logit.html Lab 6. Logistic Regression]
-- [Teaching/Lab/2026/lab7_tree.html Lab 7. CART]
-- Lab 8. Bagging, Random Forest, Boosting and XGBoost \[[Teaching/Lab/2026/lab8_advTree1.html Part1]\] \[[Teaching/Lab/2026/lab8_advTree2.html Part2]\]
-- [Teaching/Lab/2026/lab9_ann.html Lab 9. Neural Networks]
+- [Teaching/Lab/2026/Lab1_Python_Basics.html Lab 1. Python Basics]
+- [Teaching/Lab/2026/Lab2_KMeans_KNN.html Lab 2. k-means and k-nearest neighbor]
 
 
 == HW and Exercise
