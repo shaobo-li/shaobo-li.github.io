@@ -30,6 +30,7 @@
 - [Teaching/Lecture/2026/1_Intro.pdf Lecture 1]
 - [Teaching/Lecture/2026/2_SimpleAlgorithms.pdf Lecture 2]
 - [Teaching/Lecture/2026/3_LM.pdf Lecture 3]
+- [Teaching/Lecture/2026/4_LogisticReg.pdf Lecture 4]
 
 
 
@@ -38,6 +39,7 @@
 - [Teaching/Lab/2026/Lab1_Python_Basics.html Lab 1. Python Basics] \[[Teaching/Lab/2026/Lab1_Python_Basics.ipynb download notebook]\]
 - [Teaching/Lab/2026/Lab2_KMeans_KNN.html Lab 2. k-means and k-nearest neighbor] \[[Teaching/Lab/2026/Lab2_KMeans_KNN.ipynb download notebook]\]
 - [Teaching/Lab/2026/Lab3_Linear_Regression.html Lab 3. Linear Regression] \[[Teaching/Lab/2026/Lab3_Linear_Regression.ipynb download notebook]\]
+- [Teaching/Lab/2026/Lab4_Logistic_Regression.html Lab 4. Logistic Regression] \[[Teaching/Lab/2026/Lab4_Logistic_Regression.ipynb download notebook]\]
 
 
 == HW and Exercise
