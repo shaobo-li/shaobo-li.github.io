@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>BSAN 750 Lab 4: Logistic Regression for Credit-Card Default</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Lab4_Logistic_Regression_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Lab4_Logistic_Regression_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Lab4_Logistic_Regression_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Lab4_Logistic_Regression_files/libs/quarto-html/popper.min.js"></script>
+<script src="Lab4_Logistic_Regression_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Lab4_Logistic_Regression_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Lab4_Logistic_Regression_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Lab4_Logistic_Regression_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Lab4_Logistic_Regression_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Lab4_Logistic_Regression_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Lab4_Logistic_Regression_files/libs/bootstrap/bootstrap-215b371544c282197b31c8aa00ce3677.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">BSAN 750 Lab 4: Logistic Regression for Credit-Card Default</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Foundations of Machine Learning and AI</strong></p>
+<p>A bank wants to know which cardholders are likely to miss next month’s payment. What should it do with that prediction?</p>
+<p>In this lab we build a logistic regression model on 30,000 credit-card clients. We go from raw data to a business decision rule: predicted probabilities, then classifications, then a cutoff chosen by the cost of each type of mistake.</p>
+<section id="learning-objectives" class="level2">
+<h2 class="anchored" data-anchor-id="learning-objectives">Learning objectives</h2>
+<ol type="1">
+<li>Explain why a binary response needs a probability model.</li>
+<li>Fit a logistic regression and interpret coefficients as log odds and odds ratios.</li>
+<li>Convert predicted probabilities into classes with a cutoff, and read a confusion matrix.</li>
+<li>Evaluate ranking quality with ROC/AUC and precision–recall.</li>
+<li>Choose a cutoff that reflects business costs, using validation data.</li>
+<li>Report honest performance on an untouched test set.</li>
+</ol>
+</section>
+<section id="set-up-python" class="level2">
+<h2 class="anchored" data-anchor-id="set-up-python">1. Set up Python</h2>
+<p>We use <code>pandas</code> for tables, <code>statsmodels</code> to fit and summarize the logistic model, and <code>scikit-learn</code> for data splitting and classification metrics.</p>
+<p>If a package is missing, run this once in a separate cell:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install numpy pandas matplotlib scipy statsmodels scikit<span class="op">-</span>learn</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="lab4-02" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Import the tools used in this lab.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> chi2_contingency</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split, StratifiedKFold</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> (</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    confusion_matrix, ConfusionMatrixDisplay, roc_curve, roc_auc_score,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    precision_recall_curve, average_precision_score, precision_score,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    recall_score, f1_score,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">"display.precision"</span>, <span class="dv">3</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">"figure.dpi"</span>: <span class="dv">110</span>, <span class="st">"font.size"</span>: <span class="dv">11</span>})</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Setup complete."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="load-and-understand-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-and-understand-the-data">2. Load and understand the data</h2>
+<p><strong>Before coding:</strong> What does one row represent? What would a bank lose from each kind of prediction error?</p>
+<p>The data describe 30,000 credit-card clients of a bank in Taiwan in 2005. Amounts are in New Taiwan (NT) dollars. The response records whether the client defaulted on the next month’s payment.</p>
+<p>Source: <a href="https://doi.org/10.24432/C55S3H">Yeh (2009), Default of Credit Card Clients, UCI Machine Learning Repository</a>, CC BY 4.0.</p>
+<p>This is a teaching example, not a lending decision system.</p>
+<div id="lab4-04" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Read the data and give the response a short name.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.dropbox.com/s/tnoo06n8m842uit/credit_card_default.csv?dl=1"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>credit <span class="op">=</span> pd.read_csv(url)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>credit <span class="op">=</span> credit.rename(columns<span class="op">=</span>{<span class="st">"default payment next month"</span>: <span class="st">"default"</span>})</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Rows and columns:"</span>, credit.shape)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Missing entries:"</span>, credit.isna().<span class="bu">sum</span>().<span class="bu">sum</span>())</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>display(credit.head())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="how-common-is-default" class="level3">
+<h3 class="anchored" data-anchor-id="how-common-is-default">How common is default?</h3>
+<p><strong>Before coding:</strong> Suppose a model predicts “no default” for every client. What is its accuracy? Would the bank find it useful?</p>
+<div id="lab4-07" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Class balance of the response.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>display(credit[<span class="st">"default"</span>].value_counts().rename(<span class="st">"Clients"</span>).to_frame()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        .assign(Share<span class="op">=</span><span class="kw">lambda</span> t: t[<span class="st">"Clients"</span>] <span class="op">/</span> t[<span class="st">"Clients"</span>].<span class="bu">sum</span>()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>When one class is rare, a model can reach high accuracy by always predicting the common class. It would still miss every default. For imbalanced problems, look at <em>which</em> errors a model makes, not only how many.</p>
+</section>
+<section id="variables-used-in-this-lab" class="level3">
+<h3 class="anchored" data-anchor-id="variables-used-in-this-lab">Variables used in this lab</h3>
+<p>In this lab we use a subset of predictors.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>default</td>
+<td>Defaulted next month: 1 = yes, 0 = no (the response)</td>
+</tr>
+<tr class="even">
+<td>LIMIT_BAL</td>
+<td>Credit limit (NT dollars)</td>
+</tr>
+<tr class="odd">
+<td>SEX</td>
+<td>1 = male, 2 = female</td>
+</tr>
+<tr class="even">
+<td>EDUCATION</td>
+<td>1 = graduate school, 2 = university, 3 = high school, 4 = other</td>
+</tr>
+<tr class="odd">
+<td>MARRIAGE</td>
+<td>1 = married, 2 = single, 3 = other</td>
+</tr>
+<tr class="even">
+<td>PAY_0</td>
+<td>Most recent repayment status: −1 = paid on time; 1–9 = months of payment delay</td>
+</tr>
+<tr class="odd">
+<td>BILL_AMT1</td>
+<td>Most recent bill statement (NT dollars)</td>
+</tr>
+<tr class="even">
+<td>PAY_AMT1</td>
+<td>Most recent payment made (NT dollars)</td>
+</tr>
+</tbody>
+</table>
+<div id="f3emG83LoR0I" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>credit1 <span class="op">=</span> credit.copy()[[<span class="st">"default"</span>, <span class="st">"LIMIT_BAL"</span>, <span class="st">"SEX"</span>, <span class="st">"EDUCATION"</span>, <span class="st">"MARRIAGE"</span>, <span class="st">"PAY_0"</span>, <span class="st">"BILL_AMT1"</span>, <span class="st">"PAY_AMT1"</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="are-variables-in-the-right-type" class="level3">
+<h3 class="anchored" data-anchor-id="are-variables-in-the-right-type">Are variables in the right type?</h3>
+<div id="lab4-10" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> column <span class="kw">in</span> [<span class="st">"SEX"</span>, <span class="st">"EDUCATION"</span>, <span class="st">"MARRIAGE"</span>, <span class="st">"PAY_0"</span>]:</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Data type of </span><span class="sc">{</span>column<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>credit1[column]<span class="sc">.</span>dtype<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    display(credit1[column].value_counts().sort_index().rename(<span class="ss">f"</span><span class="sc">{</span>column<span class="sc">}</span><span class="ss"> count"</span>).to_frame().T)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="explore-relationships-with-the-response" class="level2">
+<h2 class="anchored" data-anchor-id="explore-relationships-with-the-response">3. Explore relationships with the response</h2>
+<p><strong>Before coding:</strong> What is the null hypothesis of a chi-square test of independence? If the test rejects, does education <em>cause</em> default?</p>
+<p>A two-way table (a simple pivot table) counts clients in each combination of two categorical variables. Row-wise default rates are often easier to read than raw counts.</p>
+<p>In a real project, explore only the training data so the test set stays untouched. Here we look at the full data to learn the tools.</p>
+<div id="LQfH2av_mfgX" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Counts, default rates by education, and a chi-square test.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>education_counts <span class="op">=</span> pd.crosstab(credit1[<span class="st">"EDUCATION"</span>], credit1[<span class="st">"default"</span>])</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>display(education_counts)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>education_rates <span class="op">=</span> credit1.groupby(<span class="st">"EDUCATION"</span>)[<span class="st">"default"</span>].mean()</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">3.5</span>))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>education_rates.plot.bar(ax<span class="op">=</span>ax, rot<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">"blue"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Education (1 = graduate, 2 = university, 3 = high school, 4 = other)"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>       ylabel<span class="op">=</span><span class="st">"Default rate"</span>, title<span class="op">=</span><span class="st">"Default rate by education"</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="lab4-14" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chi-square test</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>chi2, p_value, dof, expected <span class="op">=</span> chi2_contingency(education_counts)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Chi-square = </span><span class="sc">{</span>chi2<span class="sc">:.2f}</span><span class="ss">; df = </span><span class="sc">{</span>dof<span class="sc">}</span><span class="ss">; p-value = </span><span class="sc">{</span>p_value<span class="sc">:.3g}</span><span class="ss">"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Smallest expected count = </span><span class="sc">{</span>expected<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.1f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="your-turn" class="level3">
+<h3 class="anchored" data-anchor-id="your-turn">Your turn</h3>
+<ol type="1">
+<li>State your conclusion from the chi-square test in plain words.</li>
+<li>Build the same table of default rates for <code>MARRIAGE</code>. Which variable looks more useful for prediction, EDUCATION or MARRIAGE? Why?</li>
+</ol>
+<div id="lab4-16" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PRACTICE: Default rate by MARRIAGEs.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: data.groupby("MARRIAGE", observed=True)["default"].mean()</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="split-the-data-three-samples-three-jobs" class="level2">
+<h2 class="anchored" data-anchor-id="split-the-data-three-samples-three-jobs">4. Split the data: three samples, three jobs</h2>
+<p><strong>Before coding:</strong> We will choose a cutoff later. Which sample should we use to choose it? What goes wrong if we choose it using the test sample?</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Sample</th>
+<th>Share</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Training</td>
+<td>60%</td>
+<td>Estimate the coefficients</td>
+</tr>
+<tr class="even">
+<td>Validation</td>
+<td>20%</td>
+<td>Choose the cutoff (a decision rule)</td>
+</tr>
+<tr class="odd">
+<td>Test</td>
+<td>20%</td>
+<td>Report final performance, once</td>
+</tr>
+</tbody>
+</table>
+<div id="lab4-18" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Reserve 20% for testing, then divide the remaining 80% into 60% / 20%.</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>development, test <span class="op">=</span> train_test_split(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    credit1, test_size<span class="op">=</span><span class="fl">0.20</span>, random_state<span class="op">=</span><span class="dv">750</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>train, valid <span class="op">=</span> train_test_split(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    development, test_size<span class="op">=</span><span class="fl">0.25</span>, random_state<span class="op">=</span><span class="dv">751</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>display(pd.DataFrame({</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Sample"</span>: [<span class="st">"Training"</span>, <span class="st">"Validation"</span>, <span class="st">"Test"</span>],</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rows"</span>: [<span class="bu">len</span>(train), <span class="bu">len</span>(valid), <span class="bu">len</span>(test)],</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Default rate"</span>: [train[<span class="st">"default"</span>].mean(), valid[<span class="st">"default"</span>].mean(), test[<span class="st">"default"</span>].mean()],</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>}).set_index(<span class="st">"Sample"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="fit-and-interpret-logistic-regression" class="level2">
+<h2 class="anchored" data-anchor-id="fit-and-interpret-logistic-regression">5. Fit and interpret logistic regression</h2>
+<p>Logistic regression models the <strong>log odds</strong> of default as a linear function of the predictors:</p>
+<p><span class="math display">\[\log\left(\frac{p}{1-p}\right)=\beta_0+\beta_1x_1+\cdots+\beta_kx_k=\eta.\]</span></p>
+<p>Solving for the probability gives the S-shaped logistic curve, which always stays between 0 and 1:</p>
+<p><span class="math display">\[p=\frac{1}{1+e^{-\eta}}.\]</span></p>
+<p>In <code>statsmodels</code>, <code>smf.glm(..., family=sm.families.Binomial())</code> fits this model. The binomial family uses the logit link by default. <code>C(...)</code> turns a variable into indicator (dummy) variables.</p>
+<div id="lab4-20" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Fit the model on the training sample only.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>formula <span class="op">=</span> (</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"default ~ LIMIT_BAL + BILL_AMT1 + PAY_AMT1 + PAY_0"</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">" + C(SEX) + C(EDUCATION) + C(MARRIAGE)"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.glm(formula, data<span class="op">=</span>train, family<span class="op">=</span>sm.families.Binomial()).fit()</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="how-to-interpret-the-coefficients-beta" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-interpret-the-coefficients-beta">How to interpret the coefficients <span class="math inline">\(\beta\)</span>?</h3>
+<p>A coefficient <span class="math inline">\(\beta\)</span> is the change in <strong>log odds</strong> for a one-unit increase in that predictor, holding the others fixed. Exponentiating gives an <strong>odds ratio</strong> (why?):</p>
+<ul>
+<li><span class="math inline">\(e^{\beta} &gt; 1\)</span>: the odds of default are multiplied up.</li>
+<li><span class="math inline">\(e^{\beta} &lt; 1\)</span>: the odds of default are multiplied down.</li>
+<li><span class="math inline">\(e^{\beta} = 1\)</span>: no association.</li>
+</ul>
+<p>Thus, <span class="math inline">\((e^{\beta}-1)*100\%\)</span> can be interpreted as the % change of odds.</p>
+<p>For a categorical predictor, the odds ratio compares a category with the reference category.</p>
+<div id="lab4-22" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Exponentiate coefficients and their confidence limits.</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ci <span class="op">=</span> model.conf_int()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>odds_ratios <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Coefficient"</span>: model.params,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Odds ratio"</span>: np.exp(model.params),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OR lower 95%"</span>: np.exp(ci[<span class="dv">0</span>]),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"OR upper 95%"</span>: np.exp(ci[<span class="dv">1</span>]),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Odds (</span><span class="sc">% c</span><span class="st">hange)"</span>: <span class="bu">round</span>(<span class="dv">100</span> <span class="op">*</span> (np.exp(model.params) <span class="op">-</span> <span class="dv">1</span>), <span class="dv">2</span>),</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"p-value"</span>: model.pvalues,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>display(odds_ratios)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="your-turn-1" class="level3">
+<h3 class="anchored" data-anchor-id="your-turn-1">Your turn</h3>
+<ol type="1">
+<li>Interpret the coefficient for <code>PAY_AMT1</code> in one sentence.</li>
+<li>Interpret the coefficient for <code>EDUCATION(3)</code> in one sentence.</li>
+<li>Which predictors appear to matter most? Is a small p-value the same as a large effect?</li>
+<li>The model includes SEX and MARRIAGE. In many jurisdictions (for example, under the U.S. Equal Credit Opportunity Act), lenders may not use sex or marital status in credit decisions. What would you do with these predictors if this model were used for real decisions? Does removing them guarantee the model is fair?</li>
+</ol>
+</section>
+<section id="model-fit" class="level3">
+<h3 class="anchored" data-anchor-id="model-fit">Model fit</h3>
+<p>All three measures below are built from the <strong>log-likelihood</strong> of the fitted model:</p>
+<p><span class="math display">\[\ell(\hat\beta)=\sum_{i=1}^{n}\Big[y_i\log\hat p_i+(1-y_i)\log(1-\hat p_i)\Big].\]</span></p>
+<p>It is never positive. The closer it is to 0, the better the predicted probabilities match the observed 0/1 outcomes.</p>
+<ul>
+<li><strong>Deviance</strong> measures lack of fit (smaller is better). It plays a role like SSE in linear regression. For a 0/1 response: <span class="math display">\[D=-2\,\ell(\hat\beta).\]</span></li>
+<li><strong>AIC</strong> balances fit against the number of coefficients <span class="math inline">\(k\)</span> (including the intercept). Smaller is better: <span class="math display">\[AIC=-2\,\ell(\hat\beta)+2p.\]</span></li>
+<li>There is no ordinary <span class="math inline">\(R^2\)</span> for logistic regression. But there is a <strong>pseudo-<span class="math inline">\(R^2\)</span></strong> (McFadden’s), defined as <span class="math display">\[R^2_{\text{McF}}=1-\frac{\ell(\hat\beta)}{\ell_0},\]</span> where <span class="math inline">\(\ell_0\)</span> is the log-likelihood of the intercept-only model, which predicts the overall default rate for everyone. It measures how much the predictors improve on that baseline. Values are usually much lower than OLS <span class="math inline">\(R^2\)</span>. Values of 0.2–0.4 are often considered a good fit.</li>
+</ul>
+<p>In Python: <code>model.llf</code> is <span class="math inline">\(\ell(\hat\beta)\)</span>, <code>model.llnull</code> is <span class="math inline">\(\ell_0\)</span>, and <code>model.deviance</code> and <code>model.aic</code> give <span class="math inline">\(D\)</span> and AIC. Try <code>1 - model.llf / model.llnull</code> to get the pseudo-<span class="math inline">\(R^2\)</span>.</p>
+<p>None of these tell us how the model does on new clients. That is what the validation and test samples are for.</p>
+<div id="lab4-26" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Deviance: </span><span class="sc">{</span>model<span class="sc">.</span>deviance<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"AIC: </span><span class="sc">{</span>model<span class="sc">.</span>aic<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"pseudo Rsq: </span><span class="sc">{</span><span class="dv">1</span> <span class="op">-</span> model<span class="sc">.</span>llf <span class="op">/</span> model<span class="sc">.</span>llnull<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="from-probabilities-to-classifications" class="level2">
+<h2 class="anchored" data-anchor-id="from-probabilities-to-classifications">7. From probabilities to classifications</h2>
+<p><strong>Before coding:</strong> The model gives each client a probability. What extra decision do we need before we can say “this client will default”?</p>
+<p><code>model.predict(new_data)</code> returns predicted <strong>probabilities</strong> of default. First, look at how those probabilities separate the two groups.</p>
+<div id="lab4-28" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Predicted probabilities on the validation sample.</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>valid_y <span class="op">=</span> valid[<span class="st">"default"</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>valid_prob <span class="op">=</span> model.predict(valid)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="fl">3.8</span>))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>bins <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">41</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>ax.hist(valid_prob[valid_y <span class="op">==</span> <span class="dv">0</span>], bins<span class="op">=</span>bins, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">"green"</span>, label<span class="op">=</span><span class="st">"Did not default (0)"</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>ax.hist(valid_prob[valid_y <span class="op">==</span> <span class="dv">1</span>], bins<span class="op">=</span>bins, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">"red"</span>, label<span class="op">=</span><span class="st">"Defaulted (1)"</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Predicted probability of default"</span>, ylabel<span class="op">=</span><span class="st">"Clients"</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>       title<span class="op">=</span><span class="st">"Validation: predicted probabilities by actual outcome"</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Questions:</strong> Do the two histograms overlap? If you drew a vertical line at 0.5, which clients would fall on the “wrong” side? What happens if you slide that line left?</p>
+<section id="the-confusion-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="the-confusion-matrix">The confusion matrix</h3>
+<p>A <strong>cutoff</strong> (pcut) turns probabilities into classes: predict default when <span class="math inline">\(\hat p \ge pcut\)</span>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Formula</th>
+<th>Question it answers</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Recall (TPR, sensitivity)</td>
+<td><code>TP/(TP+FN)</code></td>
+<td>Of the clients who defaulted, what share did we catch?</td>
+</tr>
+<tr class="even">
+<td>False negative rate (FNR)</td>
+<td><code>FN/(TP+FN)</code></td>
+<td>Of the defaulters, what share did we miss?</td>
+</tr>
+<tr class="odd">
+<td>False positive rate (FPR)</td>
+<td><code>FP/(FP+TN)</code></td>
+<td>Of the good clients, what share did we wrongly flag?</td>
+</tr>
+<tr class="even">
+<td>Precision</td>
+<td><code>TP/(TP+FP)</code></td>
+<td>Of the clients we flagged, what share really defaulted?</td>
+</tr>
+<tr class="odd">
+<td>F1</td>
+<td><code>2PR/(P+R)</code></td>
+<td>A single balance of precision (P) and recall (R)</td>
+</tr>
+<tr class="even">
+<td>Misclassification rate (MR)</td>
+<td><code>(FP+FN)/n</code></td>
+<td>What share of all predictions were wrong?</td>
+</tr>
+</tbody>
+</table>
+<p>The helper below computes all useful metrics for a given cutoff. We reuse it for the rest of the lab.</p>
+<div id="0miv4T3QxEpb" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: A reusable helper for classification metrics at one cutoff.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> classification_summary(y, prob, cutoff, w_fp<span class="op">=</span><span class="dv">1</span>, w_fn<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    predicted <span class="op">=</span> (prob <span class="op">&gt;=</span> cutoff).astype(<span class="bu">int</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    tp, fn, fp, tn <span class="op">=</span> confusion_matrix(y, predicted, labels<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">0</span>]).ravel()</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Cutoff"</span>: cutoff, <span class="st">"TP"</span>: tp, <span class="st">"FN"</span>: fn, <span class="st">"FP"</span>: fp, <span class="st">"TN"</span>: tn,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Recall"</span>: tp <span class="op">/</span> (tp <span class="op">+</span> fn),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"FNR"</span>: fn <span class="op">/</span> (tp <span class="op">+</span> fn),</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"FPR"</span>: fp <span class="op">/</span> (fp <span class="op">+</span> tn),</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Precision"</span>: precision_score(y, predicted, zero_division<span class="op">=</span><span class="dv">0</span>),</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"F1"</span>: f1_score(y, predicted, zero_division<span class="op">=</span><span class="dv">0</span>),</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"MR"</span>: (fp <span class="op">+</span> fn) <span class="op">/</span> <span class="bu">len</span>(y),</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Cost per client"</span>: (w_fp <span class="op">*</span> fp <span class="op">+</span> w_fn <span class="op">*</span> fn) <span class="op">/</span> <span class="bu">len</span>(y),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="lab4-30" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get confusion matrix and classification metrics for pcut=0.5</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  on the validation sample</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>cutoff <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>valid_class <span class="op">=</span> (valid_prob <span class="op">&gt;=</span> cutoff).astype(<span class="bu">int</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>ConfusionMatrixDisplay.from_predictions(</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    valid_y, valid_class, labels<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">0</span>], cmap<span class="op">=</span><span class="st">"Blues"</span>, colorbar<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Validation confusion matrix: cutoff 0.50"</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>display(pd.DataFrame([classification_summary(valid_y, valid_prob, cutoff)]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="your-turn-2" class="level3">
+<h3 class="anchored" data-anchor-id="your-turn-2">Your turn</h3>
+<ol type="1">
+<li>At cutoff 0.5, what share of defaulters does the model catch? Compare its MR with the “predict nobody defaults” rule from Section 2.</li>
+<li><strong>Predict first:</strong> if the cutoff drops to 0.2, what happens to recall, FPR, and precision? Then check with the cell below.</li>
+<li>A bank could use this model to flag risky accounts for review. Which metric would the review team care about? Which would a risk manager care about?</li>
+</ol>
+<div id="lab4-32" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PRACTICE: Plot the validation confusion matrix at cutoff 0.2 and summarize its metrics.</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="roc-and-precisionrecall-judging-the-scores-before-choosing-a-cutoff" class="level2">
+<h2 class="anchored" data-anchor-id="roc-and-precisionrecall-judging-the-scores-before-choosing-a-cutoff">8. ROC and precision–recall: judging the scores before choosing a cutoff</h2>
+<p><strong>Before coding:</strong> Why must these functions receive predicted <em>probabilities</em> rather than predicted 0/1 classes?</p>
+<p>Each cutoff gives one confusion matrix. Sweep the cutoff from 1 down to 0 and plot the results:</p>
+<ul>
+<li><strong>ROC curve:</strong> TPR (recall) against FPR. The diagonal is random guessing.</li>
+<li><strong>Precision–recall curve:</strong> precision against recall. The baseline is the default rate, since a random flag is correct at that rate.</li>
+</ul>
+<blockquote class="blockquote">
+<p><strong>Key idea — AUC measures ranking, not classification.</strong> ROC AUC is the probability that a randomly chosen defaulter gets a higher predicted probability than a randomly chosen non-defaulter. It does not depend on any single cutoff. An AUC of 0.5 is random ranking; 1.0 is perfect.</p>
+</blockquote>
+<p>For the precision–recall curve we report <strong>average precision (AP)</strong>, a weighted average of precision across recall levels. AP is more informative than ROC AUC when positives are rare.</p>
+<div id="lab4-34" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: ROC and precision–recall curves on the validation sample.</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>fpr, tpr, _ <span class="op">=</span> roc_curve(valid_y, valid_prob)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>precision, recall, _ <span class="op">=</span> precision_recall_curve(valid_y, valid_prob)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>valid_auc <span class="op">=</span> roc_auc_score(valid_y, valid_prob)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>valid_ap <span class="op">=</span> average_precision_score(valid_y, valid_prob)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">4</span>))</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].plot(fpr, tpr, label<span class="op">=</span><span class="ss">f"ROC AUC = </span><span class="sc">{</span>valid_auc<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].plot([<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>], <span class="st">"--"</span>, color<span class="op">=</span><span class="st">"gray"</span>, label<span class="op">=</span><span class="st">"Random ranking"</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"False positive rate"</span>, ylabel<span class="op">=</span><span class="st">"True positive rate (recall)"</span>,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span><span class="st">"Validation ROC"</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].step(recall, precision, where<span class="op">=</span><span class="st">"post"</span>, label<span class="op">=</span><span class="ss">f"AP = </span><span class="sc">{</span>valid_ap<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].axhline(valid_y.mean(), ls<span class="op">=</span><span class="st">"--"</span>, color<span class="op">=</span><span class="st">"gray"</span>, label<span class="op">=</span><span class="st">"Default rate (baseline)"</span>)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Recall"</span>, ylabel<span class="op">=</span><span class="st">"Precision"</span>, title<span class="op">=</span><span class="st">"Validation precision–recall"</span>)</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    ax.<span class="bu">set</span>(xlim<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>), ylim<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">1.02</span>))</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    ax.legend(loc<span class="op">=</span><span class="st">"lower left"</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="your-turn-3" class="level3">
+<h3 class="anchored" data-anchor-id="your-turn-3">Your turn</h3>
+<ol type="1">
+<li>Interpret the validation AUC in one sentence, using the “random defaulter vs.&nbsp;random non-defaulter” idea.</li>
+<li>Where on the ROC curve is cutoff 0.5? Where is cutoff 0.2? (Use your metrics from Section 7.)</li>
+<li>Changing the cutoff moves us <em>along</em> the curve. What would it take to move the whole curve up?</li>
+</ol>
+</section>
+</section>
+<section id="choose-a-cutoff-that-reflects-business-costs" class="level2">
+<h2 class="anchored" data-anchor-id="choose-a-cutoff-that-reflects-business-costs">9. Choose a cutoff that reflects business costs</h2>
+<p><strong>Before coding:</strong> Missing a defaulter usually costs a bank more than reviewing a good client. Should the cutoff go up or down from 0.5?</p>
+<p>Assume, for illustration, that a <strong>false positive costs 1 unit</strong> and a <strong>false negative costs 5 units</strong>. These weights are teaching assumptions. In practice they come from the business.</p>
+<p><span class="math display">\[\text{Cost per client}=\frac{1\cdot FP+5\cdot FN}{n}.\]</span></p>
+<p>We search a grid of cutoffs on the <strong>validation</strong> sample and keep the one with the lowest cost. We also record the cutoffs that maximize F1 and minimize MR, to show that “best” depends on the goal.</p>
+<div id="lab4-37" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Grid search over cutoffs on validation data. The test sample is not used.</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>w_fp, w_fn <span class="op">=</span> <span class="dv">1</span>, <span class="dv">5</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>grid <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">101</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>cutoff_results <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    [classification_summary(valid_y, valid_prob, c, w_fp, w_fn) <span class="cf">for</span> c <span class="kw">in</span> grid])</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># idxmin / idxmax return the first (smallest) cutoff when there is a tie.</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>best_cutoff <span class="op">=</span> cutoff_results.loc[cutoff_results[<span class="st">"Cost per client"</span>].idxmin(), <span class="st">"Cutoff"</span>]</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>best_f1_cutoff <span class="op">=</span> cutoff_results.loc[cutoff_results[<span class="st">"F1"</span>].idxmax(), <span class="st">"Cutoff"</span>]</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>best_mr_cutoff <span class="op">=</span> cutoff_results.loc[cutoff_results[<span class="st">"MR"</span>].idxmin(), <span class="st">"Cutoff"</span>]</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Cost-ratio rule: </span><span class="sc">{</span>w_fp <span class="op">/</span> (w_fp <span class="op">+</span> w_fn)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Grid-search minimum-cost cutoff: </span><span class="sc">{</span>best_cutoff<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">3.8</span>))</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].plot(cutoff_results[<span class="st">"Cutoff"</span>], cutoff_results[<span class="st">"Cost per client"</span>], color<span class="op">=</span><span class="st">"#2563EB"</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axvline(best_cutoff, color<span class="op">=</span><span class="st">"#C8102E"</span>, ls<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="ss">f"Minimum cost: </span><span class="sc">{</span>best_cutoff<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Cutoff"</span>, ylabel<span class="op">=</span><span class="st">"Cost per client"</span>, title<span class="op">=</span><span class="st">"Validation cost (FP = 1, FN = 5)"</span>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].plot(cutoff_results[<span class="st">"Cutoff"</span>], cutoff_results[<span class="st">"MR"</span>], label<span class="op">=</span><span class="st">"MR"</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].plot(cutoff_results[<span class="st">"Cutoff"</span>], cutoff_results[<span class="st">"F1"</span>], label<span class="op">=</span><span class="st">"F1"</span>)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Cutoff"</span>, ylabel<span class="op">=</span><span class="st">"Value"</span>, title<span class="op">=</span><span class="st">"Validation MR and F1"</span>)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="lab4-38" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Compare the three objectives side by side on validation data.</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>objective_table <span class="op">=</span> pd.DataFrame([</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Objective"</span>: <span class="st">"Minimum cost (FP = 1, FN = 5)"</span>, <span class="op">**</span>classification_summary(valid_y, valid_prob, best_cutoff)},</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Objective"</span>: <span class="st">"Maximum F1"</span>, <span class="op">**</span>classification_summary(valid_y, valid_prob, best_f1_cutoff)},</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Objective"</span>: <span class="st">"Minimum MR"</span>, <span class="op">**</span>classification_summary(valid_y, valid_prob, best_mr_cutoff)},</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>]).set_index(<span class="st">"Objective"</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>display(objective_table)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="your-turn-4" class="level3">
+<h3 class="anchored" data-anchor-id="your-turn-4">Your turn</h3>
+<ol type="1">
+<li>Why does minimizing MR tend to pick a higher cutoff than minimizing cost? What does MR assume about the two error types?</li>
+<li>By construction, the minimum-cost rule cannot have a lower MR than the minimum-MR rule. Does that make it a worse decision rule? Explain.</li>
+<li>How will the cutoff, MR, and cost change if shifting the false-negative cost to 10. Rerun the search to check.</li>
+</ol>
+<p>Decide your cost weights and decision rule <strong>before</strong> you look at the test results.</p>
+<div id="lab4-40" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PRACTICE: Repeat the validation search with w_fn = 10.</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: classification_summary(valid_y, valid_prob, c, w_fp=1, w_fn=10) for each c in grid.</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="final-assessment-on-the-test-sample" class="level2">
+<h2 class="anchored" data-anchor-id="final-assessment-on-the-test-sample">10. Final assessment on the test sample</h2>
+<p><strong>Before coding:</strong> Why must we freeze the model and the cutoff before looking at the test sample?</p>
+<p>The model was fit on training data. The cutoff was chosen on validation data. The test sample now plays the role of new clients. We compare three rules:</p>
+<ul>
+<li>the validation-selected minimum-cost cutoff,</li>
+<li>cutoff 0.5 as a fixed reference, and</li>
+<li>predicting that nobody defaults (shown as cutoff = inf: nobody is ever flagged).</li>
+</ul>
+<p>Do not pick a new rule based on this table.</p>
+<div id="lab4-42" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Test data enter the analysis only now.</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>test_y <span class="op">=</span> test[<span class="st">"default"</span>]</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>test_prob <span class="op">=</span> model.predict(test)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>test_comparison <span class="op">=</span> pd.DataFrame([</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Rule"</span>: <span class="st">"Validation minimum cost"</span>, <span class="op">**</span>classification_summary(test_y, test_prob, best_cutoff, w_fp, w_fn)},</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Rule"</span>: <span class="st">"Fixed cutoff 0.50"</span>, <span class="op">**</span>classification_summary(test_y, test_prob, <span class="fl">0.5</span>, w_fp, w_fn)},</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"Rule"</span>: <span class="st">"Predict nobody defaults"</span>, <span class="op">**</span>classification_summary(test_y, test_prob, np.inf, w_fp, w_fn)},</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>]).set_index(<span class="st">"Rule"</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>display(test_comparison)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test ROC AUC: </span><span class="sc">{</span>roc_auc_score(test_y, test_prob)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test average precision: </span><span class="sc">{</span>average_precision_score(test_y, test_prob)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>ConfusionMatrixDisplay.from_predictions(</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    test_y, (test_prob <span class="op">&gt;=</span> best_cutoff).astype(<span class="bu">int</span>), labels<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">0</span>],</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">"Blues"</span>, colorbar<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f"Test confusion matrix: cutoff </span><span class="sc">{</span>best_cutoff<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="your-turn-5" class="level3">
+<h3 class="anchored" data-anchor-id="your-turn-5">Your turn</h3>
+<ol type="1">
+<li>Why does changing the cutoff leave ROC AUC unchanged?</li>
+<li>Does the lowest-cost rule also have the highest accuracy? What does this tell you about using accuracy to judge a credit model?</li>
+<li>Plot the test ROC curve and report its AUC. This is reporting, not another chance to tune.</li>
+<li>If you have a different model, what sample should you use for the final comparison?</li>
+<li>Write a 4–6 sentence summary for a bank manager. Cover how well the model ranks clients, the tradeoff between missed defaults and false alarms, and the cost assumption behind your cutoff.</li>
+</ol>
+<div id="lab4-44" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PRACTICE: Plot the test ROC curve and report its AUC.</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: follow the ROC code in Section 8 with test_y and test_prob.</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="lab-4-checklist" class="level2">
+<h2 class="anchored" data-anchor-id="lab-4-checklist">Lab 4 checklist</h2>
+<p>Restart the kernel and run the notebook from top to bottom. Then make sure you can explain:</p>
+<ol type="1">
+<li>Why accuracy can mislead when one class is rare.</li>
+<li>Why coded variables such as EDUCATION and PAY_STATUS enter as categories, and what the reference category is.</li>
+<li>How to read a coefficient as a change in log odds and as an odds ratio, and why an odds ratio is not a change in probability.</li>
+<li>What a cutoff does, and how recall, FPR, precision, and MR change as it moves.</li>
+<li>What ROC AUC measures, and why it does not depend on the cutoff.</li>
+<li>How error costs determine a sensible cutoff, and why it is chosen on validation data.</li>
+<li>Why the test sample is used once, at the end.</li>
+</ol>
+<section id="python-reference" class="level3">
+<h3 class="anchored" data-anchor-id="python-reference">Python reference</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Python</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Two-way table</td>
+<td><code>pd.crosstab(df["x"], df["y"])</code></td>
+</tr>
+<tr class="even">
+<td>Chi-square test</td>
+<td><code>chi2_contingency(table)</code></td>
+</tr>
+<tr class="odd">
+<td>Stratified split</td>
+<td><code>train_test_split(df, test_size=..., stratify=df["y"])</code></td>
+</tr>
+<tr class="even">
+<td>Fit logistic regression</td>
+<td><code>smf.glm(formula, data=df, family=sm.families.Binomial()).fit()</code></td>
+</tr>
+<tr class="odd">
+<td>Categorical predictor</td>
+<td><code>C(x)</code> in the formula</td>
+</tr>
+<tr class="even">
+<td>Coefficients and odds ratios</td>
+<td><code>model.params</code>, <code>np.exp(model.params)</code></td>
+</tr>
+<tr class="odd">
+<td>Predicted probabilities</td>
+<td><code>model.predict(new_df)</code></td>
+</tr>
+<tr class="even">
+<td>Confusion matrix (class 1 first)</td>
+<td><code>confusion_matrix(y, predicted, labels=[1, 0])</code></td>
+</tr>
+<tr class="odd">
+<td>ROC curve and AUC</td>
+<td><code>roc_curve(y, prob)</code>, <code>roc_auc_score(y, prob)</code></td>
+</tr>
+<tr class="even">
+<td>Precision–recall and AP</td>
+<td><code>precision_recall_curve(y, prob)</code>, <code>average_precision_score(y, prob)</code></td>
+</tr>
+<tr class="odd">
+<td>Stratified k-fold</td>
+<td><code>StratifiedKFold(n_splits=5, shuffle=True)</code></td>
+</tr>
+</tbody>
+</table>
+<p>References: <a href="https://www.statsmodels.org/stable/glm.html">statsmodels GLM</a>, <a href="https://scikit-learn.org/stable/modules/model_evaluation.html#classification-metrics">scikit-learn classification metrics</a>.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

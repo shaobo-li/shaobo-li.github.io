@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>BSAN 750 Lab 3: Linear Regression with Boston Housing</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Lab3_Linear_Regression_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Lab3_Linear_Regression_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Lab3_Linear_Regression_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Lab3_Linear_Regression_files/libs/quarto-html/popper.min.js"></script>
+<script src="Lab3_Linear_Regression_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Lab3_Linear_Regression_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Lab3_Linear_Regression_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Lab3_Linear_Regression_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Lab3_Linear_Regression_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Lab3_Linear_Regression_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Lab3_Linear_Regression_files/libs/bootstrap/bootstrap-215b371544c282197b31c8aa00ce3677.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">BSAN 750 Lab 3: Linear Regression with Boston Housing</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Foundations of Machine Learning and AI</strong></p>
+<p>How are housing values associated with neighborhood characteristics?</p>
+<p>This lab adapts the earlier R regression lab using <strong>Boston Housing</strong>, the dataset available in R as <code>MASS::Boston</code>. We progress from exploratory analysis to model fitting, inference, categorical predictors, interactions, diagnostics, prediction, and model assessment.</p>
+<p>Keep <code>Boston.csv</code> in the same folder as this notebook. In Colab, upload both files. The data are read locally; no R installation or dataset download is required when running the lab.</p>
+<section id="learning-objectives" class="level2">
+<h2 class="anchored" data-anchor-id="learning-objectives">Learning objectives</h2>
+<ol type="1">
+<li>Fit and interpret simple and multiple linear regressions.</li>
+<li>Obtain coefficient tests, confidence intervals, fitted values, and residuals.</li>
+<li>Represent categorical predictors and interpret an interaction.</li>
+<li>Distinguish confidence intervals for a conditional mean from prediction intervals for a new observation.</li>
+<li>Diagnose model assumptions and explore an improved functional form.</li>
+<li>Evaluate predictions with training/test samples and cross-validation.</li>
+</ol>
+<p><strong>How to work:</strong> RUN cells are worked examples. PRACTICE cells leave room for your code. Answer the questions before running each section, then interpret the output. The final bootstrap extension is optional.</p>
+</section>
+<section id="set-up-python" class="level2">
+<h2 class="anchored" data-anchor-id="set-up-python">1. Set up Python</h2>
+<p><strong>Before coding:</strong> Which package stores tables? Which provides coefficient tests and confidence intervals for a regression?</p>
+<p>We use <code>pandas</code> for tables, <code>numpy</code> for numerical operations and sampling, <code>matplotlib</code> for figures, and <code>statsmodels</code> for regression. If a package is missing, run this once in a separate notebook cell:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install numpy pandas matplotlib statsmodels</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We implement the split and cross-validation explicitly so you can see which rows are used for fitting and evaluation.</p>
+<div id="lab3-boston-003" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:36.103640Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:36.103640Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.388489Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.388489Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Import the tools used in this lab.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">"display.precision"</span>, <span class="dv">3</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">"figure.figsize"</span>: (<span class="dv">8</span>, <span class="dv">5</span>), <span class="st">"axes.grid"</span>: <span class="va">True</span>, <span class="st">"grid.alpha"</span>: <span class="fl">0.2</span>})</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Setup complete."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="load-and-understand-boston-housing" class="level2">
+<h2 class="anchored" data-anchor-id="load-and-understand-boston-housing">2. Load and understand Boston Housing</h2>
+<p><strong>Before coding:</strong> What does one row represent? Is the response an individual house price?</p>
+<p>The dataset contains 506 area-level observations and 14 variables. The response <code>medv</code> is the median value of owner-occupied homes, measured in <strong>thousands of dollars</strong>. Consequently, a prediction interval for a new row concerns another area’s median value, not the sale price of an individual house.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>medv</td>
+<td>Median owner-occupied home value (thousands of dollars), the response</td>
+</tr>
+<tr class="even">
+<td>rm</td>
+<td>Average rooms per dwelling</td>
+</tr>
+<tr class="odd">
+<td>crim</td>
+<td>Per-capita crime rate</td>
+</tr>
+<tr class="even">
+<td>lstat</td>
+<td>Percentage described by the original source as lower-status population</td>
+</tr>
+<tr class="odd">
+<td>chas</td>
+<td>1 if the tract borders the Charles River; 0 otherwise</td>
+</tr>
+<tr class="even">
+<td>rad</td>
+<td>Highway-accessibility index</td>
+</tr>
+<tr class="odd">
+<td>zn</td>
+<td>Share of residential land zoned for large lots</td>
+</tr>
+<tr class="even">
+<td>indus</td>
+<td>Share of land in non-retail business use</td>
+</tr>
+<tr class="odd">
+<td>nox</td>
+<td>Nitrogen oxides concentration</td>
+</tr>
+<tr class="even">
+<td>age</td>
+<td>Share of older owner-occupied homes</td>
+</tr>
+<tr class="odd">
+<td>dis</td>
+<td>Weighted distance to employment centers</td>
+</tr>
+<tr class="even">
+<td>tax</td>
+<td>Property-tax rate</td>
+</tr>
+<tr class="odd">
+<td>ptratio</td>
+<td>Pupil–teacher ratio</td>
+</tr>
+<tr class="even">
+<td>black</td>
+<td>Historical race-derived measure, <span class="math inline">\(1000(B_k-0.63)^2\)</span>, where <span class="math inline">\(B_k\)</span> is the area’s Black population share</td>
+</tr>
+</tbody>
+</table>
+<p>This historical dataset includes socially loaded variables and area-level measurements.</p>
+<p>Sources: <a href="https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/Boston.html">MASS data documentation</a> and <a href="https://vincentarelbundock.github.io/Rdatasets/csv/MASS/Boston.csv">Rdatasets CSV copy</a>. The CSV also includes <code>rownames</code>, an export identifier that we use only as a row index.</p>
+<div id="lab3-boston-005" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.389496Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.389496Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.402398Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.402398Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Upload the CSV only if it is missing in Colab.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data_path <span class="op">=</span> Path(<span class="st">"Boston.csv"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> data_path.exists():</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="im">from</span> google.colab <span class="im">import</span> files</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">ImportError</span>:</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">FileNotFoundError</span>(<span class="st">"Put Boston.csv in the notebook's working folder."</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    files.upload()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># rownames is an identifier, not a predictor.</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>boston <span class="op">=</span> pd.read_csv(data_path, index_col<span class="op">=</span><span class="st">"rownames"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>boston.index.name <span class="op">=</span> <span class="st">"Observation"</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Rows and variables:"</span>, boston.shape)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>display(boston.head())</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>display(boston.dtypes.rename(<span class="st">"Data type"</span>))</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>display(boston.isna().<span class="bu">sum</span>().rename(<span class="st">"Missing values"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="explore-distributions-and-relationships" class="level3">
+<h3 class="anchored" data-anchor-id="explore-distributions-and-relationships">Explore distributions and relationships</h3>
+<p><strong>Before coding:</strong> Which variables might help predict housing values? Which numeric columns represent categories or codes?</p>
+<p>Restrict a scatterplot matrix to a few quantitative variables so it remains readable. Category codes such as <code>chas</code> should be summarized separately.</p>
+<div id="lab3-boston-007" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.403402Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.403402Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.675217Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.675217Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Summarize the data and visualize selected numeric relationships.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>display(boston.describe().T)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>display(boston[<span class="st">"chas"</span>].value_counts().sort_index().rename(<span class="st">"River indicator counts"</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>display(boston[<span class="st">"rad"</span>].value_counts().sort_index().rename(<span class="st">"Accessibility-index counts"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="3ug2ivsuOeQ-" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pd.plotting.scatter_matrix(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    boston[[<span class="st">"medv"</span>, <span class="st">"rm"</span>, <span class="st">"crim"</span>, <span class="st">"lstat"</span>]],</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>), diagonal<span class="op">=</span><span class="st">"hist"</span>, alpha<span class="op">=</span><span class="fl">0.35</span>, s<span class="op">=</span><span class="dv">12</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">"Selected Boston Housing variables"</span>, y<span class="op">=</span><span class="fl">1.01</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="your-turn" class="level3">
+<h3 class="anchored" data-anchor-id="your-turn">Your turn</h3>
+<ol type="1">
+<li>How many observations and variables are in the data? Are values missing?</li>
+<li>Which variables are quantitative, and which require care because they are codes?</li>
+<li>Describe the relationships between <code>medv</code> and <code>rm</code>, and between <code>medv</code> and <code>lstat</code>.</li>
+<li>How does the distribution of <code>crim</code> look like?</li>
+</ol>
+</section>
+</section>
+<section id="simple-linear-regression-housing-value-and-rooms" class="level2">
+<h2 class="anchored" data-anchor-id="simple-linear-regression-housing-value-and-rooms">3. Simple linear regression: housing value and rooms</h2>
+<p><strong>Before coding:</strong> Predict the sign of the rooms coefficient and write the model equation.</p>
+<p><span class="math display">\[medv=\beta_0+\beta_1 rm+\epsilon.\]</span></p>
+<p>We begin with a plain scatterplot. Then we fit OLS and add a line in a separate figure.</p>
+<div id="lab3-boston-011" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.679179Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.679179Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.731234Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.731234Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Draw the plain scatterplot.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>ax.scatter(boston[<span class="st">"rm"</span>], boston[<span class="st">"medv"</span>], color<span class="op">=</span><span class="st">"#4B5563"</span>, s<span class="op">=</span><span class="dv">20</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Average rooms per dwelling (rm)"</span>, ylabel<span class="op">=</span><span class="st">"Median home value ($1,000s)"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>       title<span class="op">=</span><span class="st">"Boston housing value and average rooms"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="fit-the-model-and-add-its-line" class="level3">
+<h3 class="anchored" data-anchor-id="fit-the-model-and-add-its-line">Fit the model and add its line</h3>
+<p><strong>Before coding:</strong> What do <code>ols()</code> and <code>fit()</code> each do? Why use a sorted grid to draw the fitted line?</p>
+<p>The formula specifies the response and predictor. <code>ols()</code> sets up the model, and <code>fit()</code> estimates coefficients. An intercept is included automatically.</p>
+<div id="lab3-boston-013" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.732343Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.732343Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.798567Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.798567Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Estimate the model, inspect its summary, and plot fitted values.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>simple_model <span class="op">=</span> smf.ols(<span class="st">"medv ~ rm"</span>, data<span class="op">=</span>boston).fit()</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(simple_model.summary())</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>rooms_grid <span class="op">=</span> np.linspace(boston[<span class="st">"rm"</span>].<span class="bu">min</span>(), boston[<span class="st">"rm"</span>].<span class="bu">max</span>(), <span class="dv">120</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>line_data <span class="op">=</span> pd.DataFrame({<span class="st">"rm"</span>: rooms_grid})</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>ax.scatter(boston[<span class="st">"rm"</span>], boston[<span class="st">"medv"</span>], color<span class="op">=</span><span class="st">"#4B5563"</span>, s<span class="op">=</span><span class="dv">20</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>ax.plot(rooms_grid, simple_model.predict(line_data), color<span class="op">=</span><span class="st">"#2563EB"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Fitted regression"</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Average rooms per dwelling (rm)"</span>, ylabel<span class="op">=</span><span class="st">"Median home value ($1,000s)"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>       title<span class="op">=</span><span class="st">"Simple regression: medv ~ rm"</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="extract-coefficients-tests-and-confidence-intervals" class="level3">
+<h3 class="anchored" data-anchor-id="extract-coefficients-tests-and-confidence-intervals">Extract coefficients, tests, and confidence intervals</h3>
+<p><strong>Before coding:</strong> What null hypothesis does the rooms p-value test? Does the intercept have a meaningful interpretation here?</p>
+<p>The slope is the expected change in area median value, in thousands of dollars, associated with a one-unit increase in average rooms under this model. It is not an estimate of what adding a room to one particular house would do to its selling price.</p>
+<div id="lab3-boston-015" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.799573Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.799573Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.804236Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.804236Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Build a compact coefficient table.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>coefficient_ci <span class="op">=</span> simple_model.conf_int(alpha<span class="op">=</span><span class="fl">0.05</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>display(pd.DataFrame({</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Estimate"</span>: simple_model.params,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Std. error"</span>: simple_model.bse,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"t statistic"</span>: simple_model.tvalues,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"p-value"</span>: simple_model.pvalues,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"95</span><span class="sc">% lo</span><span class="st">wer"</span>: coefficient_ci[<span class="dv">0</span>],</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"95</span><span class="sc">% u</span><span class="st">pper"</span>: coefficient_ci[<span class="dv">1</span>],</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>}))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="fitted-values-residuals-and-mse" class="level3">
+<h3 class="anchored" data-anchor-id="fitted-values-residuals-and-mse">Fitted values, residuals, and MSE</h3>
+<p><strong>Before coding:</strong> Verify <span class="math inline">\(e_i=y_i-\hat y_i\)</span>. Why is residual MSE not the average squared training error?</p>
+<p>Let <span class="math inline">\(k\)</span> be the number of estimated coefficients, <strong>including the intercept</strong>.</p>
+<ul>
+<li>Residual MSE estimates <span class="math inline">\(\sigma^2\)</span> using <span class="math inline">\(SSE/(n-k)\)</span>; Python returns it as <code>mse_resid</code>.</li>
+<li>Average squared training error uses <span class="math inline">\(SSE/n\)</span>.</li>
+<li>Residual standard error is <span class="math inline">\(\sqrt{SSE/(n-k)}\)</span>, analogous to <code>sigma</code> in R.</li>
+</ul>
+<p>Neither is a direct measure of prediction error on new observations.</p>
+<div id="lab3-boston-017" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.805240Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.805240Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.811241Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.811241Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Extract fitted values and residuals and calculate fit measures.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fitted_table <span class="op">=</span> boston[[<span class="st">"rm"</span>, <span class="st">"medv"</span>]].copy()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>fitted_table[<span class="st">"Fitted medv"</span>] <span class="op">=</span> simple_model.fittedvalues</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>fitted_table[<span class="st">"Residual"</span>] <span class="op">=</span> simple_model.resid</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>display(fitted_table.head())</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>sse <span class="op">=</span> np.<span class="bu">sum</span>(simple_model.resid <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">int</span>(simple_model.nobs)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> <span class="bu">len</span>(simple_model.params)  <span class="co"># Includes the intercept.</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>display(pd.Series({</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"n"</span>: n,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Number of coefficients (k)"</span>: k,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Residual degrees of freedom"</span>: simple_model.df_resid,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Residual MSE: SSE / (n - k)"</span>: sse <span class="op">/</span> (n <span class="op">-</span> k),</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Training MSE: SSE / n"</span>: sse <span class="op">/</span> n,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Residual standard error"</span>: np.sqrt(simple_model.mse_resid),</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"R-squared"</span>: simple_model.rsquared,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Adjusted R-squared"</span>: simple_model.rsquared_adj,</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Residual identity holds:"</span>,</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>      np.allclose(simple_model.resid, boston[<span class="st">"medv"</span>] <span class="op">-</span> simple_model.fittedvalues))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="your-turn-1" class="level3">
+<h3 class="anchored" data-anchor-id="your-turn-1">Your turn</h3>
+<ol type="1">
+<li>Write the fitted equation and interpret the rooms slope in dollars.</li>
+<li>Is that slope significantly different from zero at the 5% level?</li>
+<li>Compute the predicted median value for an area with <code>rm = 6</code> by hand, then verify with <code>predict()</code>.</li>
+<li>Explain why predictions at <code>rm = 15</code> would be extrapolation.</li>
+</ol>
+<div id="lab3-boston-019" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.812602Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.811241Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.814088Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.814088Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PRACTICE: Calculate and verify the fitted value at rm = 6.</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hints: simple_model.params["Intercept"], simple_model.params["rm"]</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Check with simple_model.predict(pd.DataFrame({"rm": [6]})).</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="multiple-regression" class="level2">
+<h2 class="anchored" data-anchor-id="multiple-regression">4. Multiple regression</h2>
+<p><strong>Before coding:</strong> Could the rooms coefficient change after adjusting for other neighborhood characteristics?</p>
+<p><span class="math display">\[medv=\beta_0+\beta_1 crim+\beta_2 rm+\beta_3 lstat+\epsilon.\]</span></p>
+<p>Each slope now describes an association while holding the other included predictors constant.</p>
+<div id="lab3-boston-021" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.815090Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.815090Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.825407Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.825407Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Fit the three-predictor model.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>multiple_formula <span class="op">=</span> <span class="st">"medv ~ crim + rm + lstat"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>multiple_model <span class="op">=</span> smf.ols(multiple_formula, data<span class="op">=</span>boston).fit()</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(multiple_model.summary())</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="categorical-predictors" class="level2">
+<h2 class="anchored" data-anchor-id="categorical-predictors">5. Categorical predictors</h2>
+<section id="a-binary-predictor-proximity-to-the-charles-river" class="level3">
+<h3 class="anchored" data-anchor-id="a-binary-predictor-proximity-to-the-charles-river">A binary predictor: proximity to the Charles River</h3>
+<p><strong>Before coding:</strong> If <code>chas</code> is coded 0/1, how many additional coefficients are needed? What does its coefficient compare?</p>
+<div id="lab3-boston-023" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.825407Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.825407Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.835741Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.835741Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Add the river indicator to the multiple regression.</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>river_formula <span class="op">=</span> <span class="st">"medv ~ crim + rm + lstat + chas"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>river_model <span class="op">=</span> smf.ols(river_formula, data<span class="op">=</span>boston).fit()</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(river_model.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Question:</strong> How to interpret the coefficient for <code>chas</code>?</p>
+</section>
+<section id="more-than-two-categories-highway-accessibility-index" class="level3">
+<h3 class="anchored" data-anchor-id="more-than-two-categories-highway-accessibility-index">More than two categories: highway-accessibility index</h3>
+<p><strong>Before coding:</strong> How many distinct <code>rad</code> values occur? If we treat them as categories, how many indicator coefficients are required?</p>
+<p>To illustrate categorical encoding, treat each observed <code>rad</code> level separately using <code>C(rad)</code>, with level 1 as the reference. This avoids assuming that a one-unit step has the same association everywhere. It also uses more coefficients than a single numeric slope, so this is a modeling choice to evaluate.</p>
+<div id="lab3-boston-025" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.836744Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.836744Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.850310Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.850310Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Set a fixed category order from the observed accessibility codes.</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>boston[<span class="st">"rad"</span>] <span class="op">=</span> pd.Categorical(boston[<span class="st">"rad"</span>])</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Accessibility levels:"</span>, rad_levels)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># code below is to illustrate how the dummy variables are converted from the original categorical variable</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>indicators <span class="op">=</span> pd.get_dummies(boston[<span class="st">"rad"</span>], prefix<span class="op">=</span><span class="st">"rad"</span>, drop_first<span class="op">=</span><span class="va">True</span>, dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>display(pd.concat([boston[[<span class="st">"rad"</span>]], indicators], axis<span class="op">=</span><span class="dv">1</span>).head())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="RfQXCkUcPt5t" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit model</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>categorical_formula <span class="op">=</span> <span class="st">"medv ~ crim + rm + lstat + chas + C(rad)"</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>categorical_model <span class="op">=</span> smf.ols(categorical_formula, data<span class="op">=</span>boston).fit()</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(categorical_model.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Question:</strong> How to interpret the coefficients for <code>rad</code>? Is this variable statistically significant?</p>
+</section>
+<section id="your-turn-2" class="level3">
+<h3 class="anchored" data-anchor-id="your-turn-2">Your turn</h3>
+<ol type="1">
+<li>Interpret the <code>chas</code> coefficient in the categorical model.</li>
+<li>Interpret one <code>C(rad)</code> coefficient relative to level 1.</li>
+<li>Count all estimated coefficients, including the intercept, and verify <span class="math inline">\(df_{resid}=n-k\)</span>.</li>
+<li>How would changing the reference category affect coefficient labels and fitted values?</li>
+</ol>
+<div id="lab3-boston-029" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.857350Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.856346Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.858733Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.858733Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PRACTICE: Verify the residual degrees of freedom.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hints: categorical_model.nobs, len(categorical_model.params)</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="JcfpffTGQT7u" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PRACTICE: Change the reference category.</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>categorical_formula1 <span class="op">=</span> <span class="st">"medv ~ crim + rm + lstat + chas + C(rad, Treatment(reference=24))"</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>categorical_model1 <span class="op">=</span> smf.ols(categorical_formula2, data<span class="op">=</span>boston).fit()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(categorical_model.summary())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="an-interaction-rooms-river-proximity" class="level2">
+<h2 class="anchored" data-anchor-id="an-interaction-rooms-river-proximity">6. An interaction: rooms × river proximity</h2>
+<p><strong>Before coding:</strong> Could the rooms association differ between areas bordering the river and other areas?</p>
+<p><code>rm * chas</code> includes <code>rm</code>, <code>chas</code>, and their product. We keep crime, <code>lstat</code>, and the accessibility indicators as controls.</p>
+<p><span class="math display">\[medv=\beta_0+\beta_1 rm+\beta_2 chas+
+\beta_3(rm\times chas)+\text{other predictor terms}+\epsilon.\]</span></p>
+<p>The non-river rooms slope is <span class="math inline">\(\beta_1\)</span>; the river slope is <span class="math inline">\(\beta_1+\beta_3\)</span>. The river difference at <span class="math inline">\(r\)</span> rooms is <span class="math inline">\(\beta_2+\beta_3(r-6)\)</span>. Thus the <code>chas</code> main effect is the group difference specifically at six rooms. Do not assume that an interaction must be statistically significant.</p>
+<div id="lab3-boston-031" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.859736Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.858733Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.873323Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.873323Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Fit the interaction and compare it with the additive model.</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>interaction_formula <span class="op">=</span> <span class="st">"medv ~ crim + lstat + C(rad) + rm * chas"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>interaction_model <span class="op">=</span> smf.ols(interaction_formula, data<span class="op">=</span>boston).fit()</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(interaction_model.summary())</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> interaction_model.params</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>display(pd.Series({</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Non-river rooms slope"</span>: b[<span class="st">"rm"</span>],</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"River rooms slope"</span>: b[<span class="st">"rm"</span>] <span class="op">+</span> b[<span class="st">"rm:chas"</span>],</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Difference in slopes"</span>: b[<span class="st">"rm:chas"</span>],</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"River difference"</span>: b[<span class="st">"chas"</span>],</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>}))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Questions:</strong> 1. Interpret the interaction coefficient and its p-value. 2. Why keep both main effects when including their interaction?</p>
+</section>
+<section id="prediction-and-uncertainty" class="level2">
+<h2 class="anchored" data-anchor-id="prediction-and-uncertainty">7. Prediction and uncertainty</h2>
+<p><strong>Before coding:</strong> What input columns are needed to predict from the three-predictor model? Which interval should be wider?</p>
+<p><code>get_prediction().summary_frame()</code> returns both a confidence interval for the conditional mean (<code>mean_ci_lower/upper</code>) and a prediction interval for one new area-level response (<code>obs_ci_lower/upper</code>). These pointwise 95% intervals rely on the fitted model and its assumptions.</p>
+<div id="lab3-boston-037" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:37.993330Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.993330Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:37.999456Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:37.999456Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Predict for two illustrative areas with different average room counts.</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>new_areas <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"crim"</span>: [<span class="fl">0.1</span>, <span class="fl">0.1</span>],</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rm"</span>: [<span class="fl">6.0</span>, <span class="fl">7.0</span>],</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"lstat"</span>: [<span class="fl">10.0</span>, <span class="fl">10.0</span>],</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>prediction_summary <span class="op">=</span> multiple_model.get_prediction(new_areas).summary_frame(alpha<span class="op">=</span><span class="fl">0.05</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>display(pd.concat([new_areas, prediction_summary], axis<span class="op">=</span><span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="confidence-interval-vs.-prediction-interval" class="level3">
+<h3 class="anchored" data-anchor-id="confidence-interval-vs.-prediction-interval">Confidence Interval vs.&nbsp;Prediction Interval</h3>
+<p>For a given set of predictor values, regression can provide two different types of intervals:</p>
+<ul>
+<li><strong>Confidence interval for the mean response:</strong> estimates the range for the <strong>average value of <span class="math inline">\(Y\)</span></strong> among all observations with these predictor values.</li>
+<li><strong>Prediction interval:</strong> estimates the range for <strong>one new individual observation of <span class="math inline">\(Y\)</span></strong> with these predictor values.</li>
+</ul>
+<p>Conceptually,</p>
+<p><span class="math display">\[
+\text{Confidence interval: } \hat{Y} \pm \text{uncertainty in estimating the mean}
+\]</span></p>
+<p><span class="math display">\[
+\text{Prediction interval: } \hat{Y} \pm \text{uncertainty in estimating the mean + individual variation}
+\]</span></p>
+<p>Therefore, the <strong>prediction interval is always wider</strong> than the confidence interval because predicting an individual observation involves additional uncertainty.</p>
+</section>
+<section id="visualize-confidence-and-prediction-intervals" class="level3">
+<h3 class="anchored" data-anchor-id="visualize-confidence-and-prediction-intervals">Visualize confidence and prediction intervals</h3>
+<p><strong>Before coding:</strong> Why does the prediction interval include more uncertainty than the confidence interval?</p>
+<p>Return to the simple rooms model for a two-dimensional figure. The prediction interval still concerns an area’s <code>medv</code>, not one house price.</p>
+<div id="lab3-boston-039" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:38.000463Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:37.999456Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:38.070191Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:38.070191Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Draw both interval bands for the simple regression.</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>bands <span class="op">=</span> simple_model.get_prediction(line_data).summary_frame(alpha<span class="op">=</span><span class="fl">0.05</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>ax.fill_between(rooms_grid, bands[<span class="st">"obs_ci_lower"</span>].to_numpy(),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                bands[<span class="st">"obs_ci_upper"</span>].to_numpy(), color<span class="op">=</span><span class="st">"#DBEAFE"</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="st">"95% prediction interval"</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>ax.fill_between(rooms_grid, bands[<span class="st">"mean_ci_lower"</span>].to_numpy(),</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                bands[<span class="st">"mean_ci_upper"</span>].to_numpy(), color<span class="op">=</span><span class="st">"#93C5FD"</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="st">"95</span><span class="sc">% c</span><span class="st">onfidence interval for mean"</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>ax.scatter(boston[<span class="st">"rm"</span>], boston[<span class="st">"medv"</span>], color<span class="op">=</span><span class="st">"#4B5563"</span>, s<span class="op">=</span><span class="dv">15</span>, alpha<span class="op">=</span><span class="fl">0.35</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>ax.plot(rooms_grid, bands[<span class="st">"mean"</span>], color<span class="op">=</span><span class="st">"#2563EB"</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Average rooms per dwelling"</span>, ylabel<span class="op">=</span><span class="st">"Median home value ($1,000s)"</span>,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>       title<span class="op">=</span><span class="st">"Uncertainty in the simple rooms model"</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="model-diagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="model-diagnostics">8. Model diagnostics</h2>
+<p><strong>Before coding:</strong> What patterns suggest nonlinearity, unequal error variance, or influential cases?</p>
+<p>The following helper creates Python analogues of the four usual R <code>plot(lm(...))</code> diagnostics. You can reuse it without memorizing every plotting line.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Plot</th>
+<th>What to inspect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Residuals vs.&nbsp;fitted</td>
+<td>Curvature or other systematic patterns</td>
+</tr>
+<tr class="even">
+<td>Normal Q-Q</td>
+<td>Deviations from the normal reference line</td>
+</tr>
+<tr class="odd">
+<td>Scale-location</td>
+<td>Changing residual spread</td>
+</tr>
+<tr class="even">
+<td>Residuals vs.&nbsp;leverage</td>
+<td>Unusual predictor combinations together with large residuals</td>
+</tr>
+</tbody>
+</table>
+<p>Normality concerns model errors, not the distributions of predictors or raw home values. Independence depends on data collection; a random split does not remove possible spatial dependence among nearby areas.</p>
+<div id="lab3-boston-041" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:38.070191Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:38.070191Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:38.075681Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:38.075681Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Define a reusable four-panel diagnostic figure.</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> regression_diagnostics(model, title, fitted_label<span class="op">=</span><span class="st">"Fitted medv ($1,000s)"</span>):</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    influence <span class="op">=</span> model.get_influence()</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    fitted <span class="op">=</span> np.asarray(model.fittedvalues)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    residuals <span class="op">=</span> np.asarray(model.resid)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    standardized <span class="op">=</span> influence.resid_studentized_internal</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    leverage <span class="op">=</span> influence.hat_matrix_diag</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    cooks_d <span class="op">=</span> influence.cooks_distance[<span class="dv">0</span>]</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    scale <span class="op">=</span> np.sqrt(np.<span class="bu">abs</span>(standardized))</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">8</span>))</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LOWESS draws a smooth trend to help reveal patterns.</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax, x, y, xlabel, ylabel <span class="kw">in</span> [</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>        (axes[<span class="dv">0</span>, <span class="dv">0</span>], fitted, residuals, fitted_label, <span class="st">"Residuals"</span>),</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        (axes[<span class="dv">1</span>, <span class="dv">0</span>], fitted, scale, fitted_label, <span class="st">"Sqrt(|standardized residual|)"</span>),</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        (axes[<span class="dv">1</span>, <span class="dv">1</span>], leverage, standardized, <span class="st">"Leverage"</span>, <span class="st">"Standardized residuals"</span>),</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    ]:</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        ax.scatter(x, y, color<span class="op">=</span><span class="st">"#6B7280"</span>, s<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        smooth <span class="op">=</span> sm.nonparametric.lowess(y, x, frac<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>        ax.plot(smooth[:, <span class="dv">0</span>], smooth[:, <span class="dv">1</span>], color<span class="op">=</span><span class="st">"#C8102E"</span>, linewidth<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        ax.<span class="bu">set</span>(xlabel<span class="op">=</span>xlabel, ylabel<span class="op">=</span>ylabel)</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>, <span class="dv">0</span>].axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">"black"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, linewidth<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>, <span class="dv">1</span>].axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">"black"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, linewidth<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>    sm.qqplot(standardized, line<span class="op">=</span><span class="st">"s"</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>, <span class="dv">1</span>])</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>, <span class="dv">0</span>].set_title(<span class="st">"Residuals vs. fitted"</span>)</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>, <span class="dv">1</span>].<span class="bu">set</span>(title<span class="op">=</span><span class="st">"Normal Q-Q"</span>, ylabel<span class="op">=</span><span class="st">"Standardized residuals"</span>)</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>, <span class="dv">0</span>].set_title(<span class="st">"Scale-location"</span>)</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>, <span class="dv">1</span>].set_title(<span class="st">"Residuals vs. leverage"</span>)</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Cook's-distance contours combine residual size with leverage.</span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>    k <span class="op">=</span> <span class="bu">len</span>(model.params)  <span class="co"># Coefficients, including the intercept.</span></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>    h_max <span class="op">=</span> <span class="bu">min</span>(<span class="fl">0.95</span>, <span class="bu">max</span>(<span class="fl">0.3</span>, leverage.<span class="bu">max</span>() <span class="op">*</span> <span class="fl">1.15</span>))</span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>    h_grid <span class="op">=</span> np.linspace(<span class="fl">0.001</span>, h_max, <span class="dv">250</span>)</span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>    y_limit <span class="op">=</span> <span class="bu">max</span>(<span class="dv">3</span>, np.<span class="bu">abs</span>(standardized).<span class="bu">max</span>() <span class="op">*</span> <span class="fl">1.25</span>)</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> distance <span class="kw">in</span> [<span class="fl">0.5</span>, <span class="fl">1.0</span>]:</span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>        contour <span class="op">=</span> np.sqrt(distance <span class="op">*</span> k <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> h_grid) <span class="op">/</span> h_grid)</span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>, <span class="dv">1</span>].plot(h_grid, contour, <span class="st">"--"</span>, color<span class="op">=</span><span class="st">"#94A3B8"</span>,</span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>                        label<span class="op">=</span><span class="ss">f"Cook's D = </span><span class="sc">{</span>distance<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>, <span class="dv">1</span>].plot(h_grid, <span class="op">-</span>contour, <span class="st">"--"</span>, color<span class="op">=</span><span class="st">"#94A3B8"</span>)</span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Label the original observation identifiers.</span></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> np.argsort(cooks_d)[<span class="op">-</span><span class="dv">3</span>:]:</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>, <span class="dv">1</span>].annotate(<span class="bu">str</span>(model.model.data.row_labels[i]), (leverage[i], standardized[i]),</span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>                            xytext<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">4</span>), textcoords<span class="op">=</span><span class="st">"offset points"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>, <span class="dv">1</span>].<span class="bu">set</span>(xlim<span class="op">=</span>(<span class="dv">0</span>, h_max), ylim<span class="op">=</span>(<span class="op">-</span>y_limit, y_limit))</span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>, <span class="dv">1</span>].legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>    fig.suptitle(title, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>    fig.tight_layout()</span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="diagnose-the-three-predictor-model" class="level3">
+<h3 class="anchored" data-anchor-id="diagnose-the-three-predictor-model">Diagnose the three-predictor model</h3>
+<p><strong>Before coding:</strong> Given the scatterplot matrix, where do you expect the linear specification to struggle? Does a high <span class="math inline">\(R^2\)</span> guarantee satisfactory diagnostics?</p>
+<div id="lab3-boston-043" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:38.075681Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:38.075681Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:38.322058Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:38.322058Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Inspect diagnostics for the model from the old R lab.</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>regression_diagnostics(multiple_model, <span class="st">"Boston: medv ~ crim + rm + lstat"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="explore-a-nonlinear-relationship" class="level3">
+<h3 class="anchored" data-anchor-id="explore-a-nonlinear-relationship">Explore a nonlinear relationship</h3>
+<p><strong>Before coding:</strong> Would a straight line capture the relationship between <code>lstat</code> and housing value? Can a model with a squared predictor still be a linear regression?</p>
+<p>A quadratic predictor keeps the model linear in its coefficients. In a formula, <code>I(lstat ** 2)</code> means include the arithmetic square as a predictor. Keep the linear term as well.</p>
+<p>We fit a quadratic extension of the categorical model. Compare its diagnostics and fit with the simpler specification; an extra term does not automatically fix every assumption.</p>
+<div id="lab3-boston-045" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:38.323256Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:38.323256Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:38.595970Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:38.595970Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Add a quadratic lstat term and inspect the result.</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>quadratic_formula <span class="op">=</span> categorical_formula <span class="op">+</span> <span class="st">" + I(lstat ** 2)"</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>quadratic_model <span class="op">=</span> smf.ols(quadratic_formula, data<span class="op">=</span>boston).fit()</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(quadratic_model.summary())</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>display(sm.stats.anova_lm(categorical_model, quadratic_model))</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>regression_diagnostics(quadratic_model, <span class="st">"Boston: categorical model + quadratic lstat"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="investigate-influential-observations" class="level3">
+<h3 class="anchored" data-anchor-id="investigate-influential-observations">Investigate influential observations</h3>
+<p><strong>Before coding:</strong> Does high leverage necessarily mean the response is unusual? Should a large Cook’s distance automatically trigger deletion?</p>
+<p>Leverage measures unusual predictor combinations. Cook’s distance summarizes the effect an observation can have on the fitted coefficients. The rule <span class="math inline">\(D_i&gt;4/n\)</span> is a screening heuristic, not a formal test or deletion rule. Examine records and context and assess sensitivity before changing the data.</p>
+<div id="lab3-boston-047" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:38.597208Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:38.597208Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:38.604018Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:38.604018Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: List observations with the largest Cook's distances.</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>influence <span class="op">=</span> quadratic_model.get_influence()</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>influence_table <span class="op">=</span> boston[[<span class="st">"medv"</span>, <span class="st">"rm"</span>, <span class="st">"crim"</span>, <span class="st">"lstat"</span>, <span class="st">"chas"</span>, <span class="st">"rad"</span>]].copy()</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>influence_table[<span class="st">"Standardized residual"</span>] <span class="op">=</span> influence.resid_studentized_internal</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>influence_table[<span class="st">"Leverage"</span>] <span class="op">=</span> influence.hat_matrix_diag</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>influence_table[<span class="st">"Cook's D"</span>] <span class="op">=</span> influence.cooks_distance[<span class="dv">0</span>]</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>influence_table[<span class="st">"Flag: D &gt; 4/n"</span>] <span class="op">=</span> influence_table[<span class="st">"Cook's D"</span>] <span class="op">&gt;</span> <span class="dv">4</span> <span class="op">/</span> <span class="bu">len</span>(boston)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>display(influence_table.sort_values(<span class="st">"Cook's D"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="compare-model-fit" class="level3">
+<h3 class="anchored" data-anchor-id="compare-model-fit">Compare model fit</h3>
+<p><strong>Before coding:</strong> Must training <span class="math inline">\(R^2\)</span> improve when predictors are added? Does improved in-sample fit guarantee better prediction?</p>
+<p>All models below use the same response and observations. Higher adjusted <span class="math inline">\(R^2\)</span> and lower residual MSE, AIC, or BIC can favor a specification, but these are not test errors. Predictors should not be removed mechanically by individual p-values, especially when interactions or squared terms are present.</p>
+<div id="lab3-boston-049" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:38.605021Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:38.605021Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:38.610792Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:38.610792Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Compare all full-data models in one table.</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>full_data_models <span class="op">=</span> {</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rooms only"</span>: simple_model,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Three predictors"</span>: multiple_model,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Additive + river"</span>: river_model,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Categorical accessibility"</span>: categorical_model,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rooms × river interaction"</span>: interaction_model,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Quadratic lstat"</span>: quadratic_model,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>fit_comparison <span class="op">=</span> pd.DataFrame([</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Model"</span>: name,</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Coefficients"</span>: <span class="bu">len</span>(model.params),</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"R-squared"</span>: model.rsquared,</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Adjusted R-squared"</span>: model.rsquared_adj,</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Residual MSE"</span>: model.mse_resid,</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"AIC"</span>: model.aic,</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"BIC"</span>: model.bic,</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name, model <span class="kw">in</span> full_data_models.items()</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>]).set_index(<span class="st">"Model"</span>)</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>display(fit_comparison)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="your-turn-another-possible-improvement" class="level3">
+<h3 class="anchored" data-anchor-id="your-turn-another-possible-improvement">Your turn: another possible improvement</h3>
+<ol type="1">
+<li>Identify a diagnostic problem that remains in the quadratic model.</li>
+<li>Consider modeling <code>np.log(medv)</code> if spread increases with fitted values.</li>
+<li>Fit a log-response version of the three-predictor model and inspect diagnostics.</li>
+<li>Explain why exponentiating a fitted log value does not generally estimate the conditional arithmetic mean of <code>medv</code>.</li>
+</ol>
+<p>When evaluating a log-response model, compute prediction errors on the original <code>medv</code> scale. A retransformation correction, if used, must be estimated using only the relevant training observations. Do not compare raw residual MSE across models with different response scales.</p>
+<div id="lab3-boston-051" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:38.612005Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:38.610792Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:38.614053Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:38.614053Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PRACTICE: Explore a log-response model.</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Hint: smf.ols("np.log(medv) ~ crim + rm + lstat", data=boston).fit()</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Then call regression_diagnostics(your_model, "Log-response model",</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                                  fitted_label="Fitted log(medv)").</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># The fitted_label argument sets the correct response scale on the axes.</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># YOUR CODE HERE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="evaluate-prediction-traintest-split" class="level2">
+<h2 class="anchored" data-anchor-id="evaluate-prediction-traintest-split">9. Evaluate prediction: train/test split</h2>
+<p><strong>Before coding:</strong> Why must we refit on the training sample instead of reusing a model fitted to all observations?</p>
+<p>Use an 80/20 split. We specify candidate formulas, compare them through cross-validation <strong>inside the training sample</strong>, and evaluate the chosen model once on the test sample.</p>
+<p>The full-data analyses above demonstrate inference and diagnostics. Because we have already explored the complete dataset, the split below illustrates the evaluation procedure rather than providing a fully untouched model-development audit. In a new project, reserve test observations before model-guided exploration. Random splits also assess a different task from predicting a new city, later period, or geographically separate region.</p>
+<div id="LowkkjhHTwMC" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix candidate specifications before examining test performance.</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>candidate_formulas <span class="op">=</span> {</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rooms only"</span>: <span class="st">"medv ~ rm"</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Three predictors"</span>: multiple_formula,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Categorical accessibility"</span>: categorical_formula,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rooms × river interaction"</span>: interaction_formula,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Quadratic lstat"</span>: quadratic_formula,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="lab3-boston-053" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:38.614053Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:38.614053Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:38.617967Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:38.617967Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># random split 80/20 training testing</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>train, test <span class="op">=</span> train_test_split(boston, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">1234</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># train models on training sample and compute MSPE, RMSPE and MAPE on testing sample</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>test_results <span class="op">=</span> []</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, formula <span class="kw">in</span> candidate_formulas.items():</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> smf.ols(formula, data<span class="op">=</span>train).fit()</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    predictions <span class="op">=</span> model.predict(test)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    actual_test <span class="op">=</span> test[<span class="st">"medv"</span>]</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    errors <span class="op">=</span> actual_test <span class="op">-</span> predictions</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    test_results.append({</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Model"</span>: name,</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Training MSE"</span>: model.mse_resid,</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Training R-squared"</span>: model.rsquared,</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Test MSPE"</span>: np.mean(errors <span class="op">**</span> <span class="dv">2</span>),</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Test RMSPE"</span>: np.sqrt(np.mean(errors <span class="op">**</span> <span class="dv">2</span>)),</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Test MAPE"</span>: np.mean(np.<span class="bu">abs</span>(errors)),</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Test R-squared"</span>: <span class="dv">1</span> <span class="op">-</span> np.<span class="bu">sum</span>(errors <span class="op">**</span> <span class="dv">2</span>) <span class="op">/</span> np.<span class="bu">sum</span>(</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>            (actual_test <span class="op">-</span> actual_test.mean()) <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>display(pd.DataFrame(test_results).set_index(<span class="st">"Model"</span>).sort_values(<span class="st">"Test RMSPE"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="ten-fold-cross-validation" class="level2">
+<h2 class="anchored" data-anchor-id="ten-fold-cross-validation">10. Ten-fold cross-validation</h2>
+<p><strong>Before coding:</strong> How often does each training observation serve as validation data? Why use identical folds for all candidates?</p>
+<p>At the end of the cross-validation process, we need to get CV score, which can be any metrics we want to evaluate.</p>
+<p>Note, CV-<span class="math inline">\(R^2\)</span> uses all validation predictions together; it is not the average of ten fold-specific <span class="math inline">\(R^2\)</span> values.</p>
+<div id="lab3-boston-055" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:38.619072Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:38.619072Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:38.929181Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:38.929181Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Create the same ten folds for every candidate model.</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>fold_rng <span class="op">=</span> np.random.default_rng(<span class="dv">751</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>folds <span class="op">=</span> np.array_split(fold_rng.permutation(<span class="bu">len</span>(train)), <span class="dv">10</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>cv_rows <span class="op">=</span> []</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a helper function for cross-validation for linear regression</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_cross_validation(data, candidate_formulas, folds):</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    cv_results_rows <span class="op">=</span> []</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name, formula <span class="kw">in</span> candidate_formulas.items():</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        oof_predictions <span class="op">=</span> np.empty(<span class="bu">len</span>(data))</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> validation_rows <span class="kw">in</span> folds:</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>            fitting_rows <span class="op">=</span> np.setdiff1d(np.arange(<span class="bu">len</span>(data)), validation_rows)</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>            fold_train <span class="op">=</span> data.iloc[fitting_rows]</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>            fold_valid <span class="op">=</span> data.iloc[validation_rows]</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>            <span class="co"># All fitting occurs on this fold's training observations.</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>            fold_model <span class="op">=</span> smf.ols(formula, data<span class="op">=</span>fold_train).fit()</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>            oof_predictions[validation_rows] <span class="op">=</span> fold_model.predict(fold_valid)</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>        actual <span class="op">=</span> data[<span class="st">"medv"</span>].to_numpy()</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>        errors <span class="op">=</span> actual <span class="op">-</span> oof_predictions</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>        cv_results_rows.append({</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Model"</span>: name,</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">"CV_MSPE"</span>: np.mean(errors <span class="op">**</span> <span class="dv">2</span>),</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">"CV_RMSPE"</span>: np.sqrt(np.mean(errors <span class="op">**</span> <span class="dv">2</span>)),</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>            <span class="st">"CV_MAPE"</span>: np.mean(np.<span class="bu">abs</span>(errors)),</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>            <span class="st">"CV_R-squared"</span>: <span class="dv">1</span> <span class="op">-</span> np.<span class="bu">sum</span>(errors <span class="op">**</span> <span class="dv">2</span>) <span class="op">/</span> np.<span class="bu">sum</span>((actual <span class="op">-</span> actual.mean()) <span class="op">**</span> <span class="dv">2</span>),</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.DataFrame(cv_results_rows).set_index(<span class="st">"Model"</span>)</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>cv_results <span class="op">=</span> run_cross_validation(train, candidate_formulas, folds).sort_values(<span class="st">"CV_RMSPE"</span>)</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>display(cv_results)</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>selected_name <span class="op">=</span> cv_results.index[<span class="dv">0</span>]</span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Selected using training CV:"</span>, selected_name)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="evaluate-the-selected-model-on-the-test-sample" class="level3">
+<h3 class="anchored" data-anchor-id="evaluate-the-selected-model-on-the-test-sample">Evaluate the selected model on the test sample</h3>
+<p><strong>Before coding:</strong> How do MSE, RMSE, and MAE differ in units? Can test <span class="math inline">\(R^2\)</span> be negative?</p>
+<ul>
+<li>Test MSE (MSPE) is average squared prediction error, measured in squared thousands of dollars.</li>
+<li>Test RMSE and MAE are measured in thousands of dollars.</li>
+<li>MAE is not MAPE, which is a percentage metric.</li>
+<li>Test <span class="math inline">\(R^2=1-SSE_{test}/SST_{test}\)</span> can be negative.</li>
+</ul>
+<p>We also report a baseline that predicts the <strong>training mean</strong> for every test row. This differs from the test-mean reference used in the definition of test <span class="math inline">\(R^2\)</span>. Do not switch models after inspecting the test results.</p>
+<div id="lab3-boston-057" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:38.930185Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:38.930185Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:38.946802Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:38.946802Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN: Refit the selected model on all training observations.</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>test_results <span class="op">=</span> []</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, formula <span class="kw">in</span> candidate_formulas.items():</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Refit each candidate model on all training observations</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    model_on_full_train <span class="op">=</span> smf.ols(formula, data<span class="op">=</span>train).fit()</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make predictions on the test set</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    predictions <span class="op">=</span> model_on_full_train.predict(test).to_numpy()</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate errors and metrics</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>    actual_test <span class="op">=</span> test[<span class="st">"medv"</span>].to_numpy()</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    errors <span class="op">=</span> actual_test <span class="op">-</span> predictions</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>    test_results.append({</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Model"</span>: name,</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Test MSPE"</span>: np.mean(errors <span class="op">**</span> <span class="dv">2</span>),</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Test RMSPE"</span>: np.sqrt(np.mean(errors <span class="op">**</span> <span class="dv">2</span>)),</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Test MAPE"</span>: np.mean(np.<span class="bu">abs</span>(errors)),</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Test R-squared"</span>: <span class="dv">1</span> <span class="op">-</span> np.<span class="bu">sum</span>(errors <span class="op">**</span> <span class="dv">2</span>) <span class="op">/</span> np.<span class="bu">sum</span>(</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>            (actual_test <span class="op">-</span> actual_test.mean()) <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>display(pd.DataFrame(test_results).set_index(<span class="st">"Model"</span>).sort_values(<span class="st">"Test RMSPE"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="your-turn-3" class="level3">
+<h3 class="anchored" data-anchor-id="your-turn-3">Your turn</h3>
+<ol type="1">
+<li>Does CV favor the same specification as the full-data fit measures?</li>
+<li>Why can residual MSE differ from test MSPE?</li>
+<li>Why is repeatedly changing the random seed to find a favorable test result inappropriate?</li>
+</ol>
+</section>
+</section>
+<section id="optional-extension-bootstrap-the-rooms-slope" class="level2">
+<h2 class="anchored" data-anchor-id="optional-extension-bootstrap-the-rooms-slope">11. Optional extension: bootstrap the rooms slope</h2>
+<p><strong>Before coding:</strong> How does resampling with replacement differ from splitting rows into training and test samples?</p>
+<p>Resample the 506 rows 500 times and refit the simple rooms model. The 2.5th and 97.5th percentiles form an approximate 95% percentile-bootstrap interval.</p>
+<p>This illustrates sampling variability under an independent-row resampling assumption. It does not correct functional-form problems or spatial dependence. This full-data inference exercise is separate from test-set evaluation.</p>
+<div id="lab3-boston-063" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-10T03:25:39.006613Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-10T03:25:39.005610Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-10T03:25:39.997570Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-10T03:25:39.997570Z&quot;}}">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN (OPTIONAL): Bootstrap the simple-regression rooms coefficient.</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>bootstrap_rng <span class="op">=</span> np.random.default_rng(<span class="dv">752</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>bootstrap_slopes <span class="op">=</span> []</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> repetition <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">500</span>):</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    sample_rows <span class="op">=</span> bootstrap_rng.integers(<span class="dv">0</span>, <span class="bu">len</span>(boston), size<span class="op">=</span><span class="bu">len</span>(boston))</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    bootstrap_sample <span class="op">=</span> boston.iloc[sample_rows]</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    bootstrap_model <span class="op">=</span> smf.ols(<span class="st">"medv ~ rm"</span>, data<span class="op">=</span>bootstrap_sample).fit()</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    bootstrap_slopes.append(bootstrap_model.params[<span class="st">"rm"</span>])</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>bootstrap_slopes <span class="op">=</span> np.asarray(bootstrap_slopes)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>lower, upper <span class="op">=</span> np.quantile(bootstrap_slopes, [<span class="fl">0.025</span>, <span class="fl">0.975</span>])</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="jRuGRAhdWfeu" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Show bootsrap std and CI, and compare with the theoretical estimtes.</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>theoretical_ci <span class="op">=</span> simple_model.conf_int(alpha<span class="op">=</span><span class="fl">0.05</span>).loc[<span class="st">"rm"</span>]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>display(pd.Series({</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Original rooms slope"</span>: simple_model.params[<span class="st">"rm"</span>],</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Bootstrap standard error"</span>: bootstrap_slopes.std(ddof<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"95% bootstrap lower"</span>: lower,</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"95% bootstrap upper"</span>: upper,</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Theoretical standard error"</span>: simple_model.bse[<span class="st">"rm"</span>],</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"95% theoretical lower"</span>: theoretical_ci[<span class="dv">0</span>],</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"95% theoretical upper"</span>: theoretical_ci[<span class="dv">1</span>]</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>}))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="vFBEHXadWTQC" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">## show the Bootstrap distribution</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>ax.hist(bootstrap_slopes, bins<span class="op">=</span><span class="dv">25</span>, color<span class="op">=</span><span class="st">"#93C5FD"</span>, edgecolor<span class="op">=</span><span class="st">"white"</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>ax.axvline(simple_model.params[<span class="st">"rm"</span>], color<span class="op">=</span><span class="st">"#2563EB"</span>,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>           linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Original estimate"</span>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>ax.axvline(lower, color<span class="op">=</span><span class="st">"#C8102E"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="st">"95% percentile endpoints"</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>ax.axvline(upper, color<span class="op">=</span><span class="st">"#C8102E"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>ax.axvline(theoretical_ci[<span class="dv">0</span>], color<span class="op">=</span><span class="st">"#16A34A"</span>, linestyle<span class="op">=</span><span class="st">":"</span>, label<span class="op">=</span><span class="st">"95% theoretical CI"</span>)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>ax.axvline(theoretical_ci[<span class="dv">1</span>], color<span class="op">=</span><span class="st">"#16A34A"</span>, linestyle<span class="op">=</span><span class="st">":"</span>)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">"Estimated rooms slope ($1,000s per room)"</span>, ylabel<span class="op">=</span><span class="st">"Frequency"</span>,</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>       title<span class="op">=</span><span class="st">"Bootstrap distribution of the rooms coefficient"</span>)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="lab-3-checklist" class="level2">
+<h2 class="anchored" data-anchor-id="lab-3-checklist">Lab 3 checklist</h2>
+<p>Restart the kernel and run the notebook from top to bottom. Then write a short interpretation covering:</p>
+<ol type="1">
+<li>What one observation and the response variable represent.</li>
+<li>A simple-regression slope versus a slope adjusted for other predictors.</li>
+<li>Binary coding, the reference category for <code>rad</code>, and residual degrees of freedom.</li>
+<li>The rooms × river interaction and its conditional interpretation.</li>
+<li>Confidence intervals versus prediction intervals.</li>
+<li>One diagnostic finding and an appropriate model improvement.</li>
+<li>Cross-validation, test error, and the limits of the evaluation design.</li>
+</ol>
+<section id="python-reference" class="level3">
+<h3 class="anchored" data-anchor-id="python-reference">Python reference</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Python</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Fit OLS</td>
+<td><code>smf.ols(formula, data=df).fit()</code></td>
+</tr>
+<tr class="even">
+<td>Regression summary</td>
+<td><code>model.summary()</code></td>
+</tr>
+<tr class="odd">
+<td>Coefficients and tests</td>
+<td><code>model.params</code>, <code>model.bse</code>, <code>model.pvalues</code></td>
+</tr>
+<tr class="even">
+<td>Coefficient intervals</td>
+<td><code>model.conf_int()</code></td>
+</tr>
+<tr class="odd">
+<td>Fitted values and residuals</td>
+<td><code>model.fittedvalues</code>, <code>model.resid</code></td>
+</tr>
+<tr class="even">
+<td>Residual variance estimate</td>
+<td><code>model.mse_resid</code></td>
+</tr>
+<tr class="odd">
+<td>Categorical predictor</td>
+<td><code>C(rad)</code> in the formula</td>
+</tr>
+<tr class="even">
+<td>Main effects plus interaction</td>
+<td><code>rm_c * chas</code></td>
+</tr>
+<tr class="odd">
+<td>Squared predictor</td>
+<td><code>I(lstat ** 2)</code></td>
+</tr>
+<tr class="even">
+<td>Predictions</td>
+<td><code>model.predict(new_data)</code></td>
+</tr>
+<tr class="odd">
+<td>Mean and observation intervals</td>
+<td><code>model.get_prediction(new_data).summary_frame()</code></td>
+</tr>
+<tr class="even">
+<td>Nested-model comparison</td>
+<td><code>sm.stats.anova_lm(reduced, full)</code></td>
+</tr>
+<tr class="odd">
+<td>Influence measures</td>
+<td><code>model.get_influence()</code></td>
+</tr>
+</tbody>
+</table>
+<p>Use this workflow as preparation for the regression analysis in Homework 3.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
